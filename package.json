@@ -10,8 +10,8 @@
     "test": "",
     "installStarknetCli": "git clone -b main https://github.com/truffle-box/cairo-starknet-cli-docker.git",
     "buildStarknetCli": "cd cairo-starknet-cli-docker && docker build --build-arg CAIRO_VERSION=0.6.1 -t cairo-starknet-cli:0.6.1 .",
-    "compile:starknet": "",
-    "migrate:starknet": "",
+    "compile:starknet": "node ./scripts/compile_starknet.js",
+    "deploy:starknet": "node ./scripts/deploy_starknet.js",
     "test:starknet": ""
   },
   "repository": {
@@ -33,6 +33,8 @@
   },
   "homepage": "https://github.com/truffle-box/starknet-box#readme",
   "devDependencies": {
+    "@truffle/hdwallet-provider": "^1.4.1",
     "dotenv": "^10.0.0"
-  }
+  },
+  "dependencies": {}
 }
