@@ -1,4 +1,11 @@
+# Environment files
 .env
 .env.test
+
+# Build artifacts and node pacakges
 build
 node_modules
+
+# Python caches
+__pycache__
+.pytest_cache
