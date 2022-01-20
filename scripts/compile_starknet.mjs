@@ -11,10 +11,20 @@ const starkNetDocker = new StarkNetDocker(image);
 const contractsDir = starknetConfig.contracts_directory;
 const currentDir = process.cwd();
 
-// Get list of cairo contract files from the contracts/starknet directory and compile them
-let directoryList = fs.readdirSync(contractsDir);
-for (let file of directoryList) {
-    if (file.endsWith("cairo")) {
-        starkNetDocker.compileContract(file, currentDir);
+starkNetDocker.loadImage(image).then((result) => {
+    // Get list of cairo contract files from the contracts/starknet directory and compile them
+    // console.log(`Result: ${result}`);
+    if (result) {
+        let directoryList = fs.readdirSync(contractsDir);
+        console.log(`\nCompiling contracts\n===================\n`);
+        for (let file of directoryList) {
+            if (file.endsWith("cairo")) {
+                console.log(`Compiling ${file}`);
+                starkNetDocker.compileContract(file, currentDir);
+            }
+        }
+    } else {
+        console.log(`Unable to continue. The requested image was not found locally of on Docker Hub.`);
     }
-}
+});
+

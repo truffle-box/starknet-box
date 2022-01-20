@@ -26,7 +26,7 @@ module.exports = {
   compilers: {
     cairo: {
       repository: "dkillen/cairo-starknet-cli",   // Docker Hub repository
-      version: "0.6.2",                           // Version tag
+      version: "0.7.0",                           // Version tag
     }
   }
 };
