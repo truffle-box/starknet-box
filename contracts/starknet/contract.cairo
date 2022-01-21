@@ -1,7 +1,5 @@
-# Declare this file as a StarkNet contract and set the required
-# builtins.
+# Declare this file as a StarkNet contract.
 %lang starknet
-%builtins pedersen range_check
 
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 
