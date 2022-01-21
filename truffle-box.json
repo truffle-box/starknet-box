@@ -1,12 +1,6 @@
 {
-  "ignore": [
-    "README.md",
-    ".gitignore"
-  ],
-  "commands": {
-    
-  },
+  "ignore": ["README.md", ".gitignore"],
   "hooks": {
-    "post-unpack": ""
+    "post-unpack": "npm install --loglevel=error && touch .env"
   }
 }
