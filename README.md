@@ -4,11 +4,13 @@ This Truffle StarkNet Box provides you with the boilerplate structure necessary 
 This box provides a simple cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version 0.7.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
 ## Requirements
 The StarkNet Box has the following requirements:
-- [Node.js](https://nodejs.org/) 14.18.1 or later
+- [Node.js](https://nodejs.org/) 14.18.2 or later
 - [NPM](https://docs.npmjs.com/cli/) version 6.14.15 or later
 - [docker](https://docs.docker.com/get-docker/), version 20.10.10 or later
 - Recommended Docker memory allocation of >=8 GB.
-- Windows or MacOS
+- Windows, MacOS or Linux
+
+**Important Note:** The scripts included in this Box rely on Docker being available and running. On Linux you may need to have Docker configured to [run the Docker daemon in 'rootless' mode](https://docs.docker.com/engine/security/rootless/).
  
 ## Installation
 
