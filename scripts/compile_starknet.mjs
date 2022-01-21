@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs, { existsSync } from 'fs';
 import { Image, StarkNetDocker } from './starknet-docker.js';
 
 import starknetConfig from '../truffle-config.starknet.js';
@@ -9,6 +9,7 @@ const image = new Image(compiler_repo,compiler_version);
 const starkNetDocker = new StarkNetDocker(image);
 
 const contractsDir = starknetConfig.contracts_directory;
+const buildDir = starknetConfig.contracts_build_directory;
 const currentDir = process.cwd();
 
 starkNetDocker.loadImage(image).then((result) => {
@@ -16,6 +17,12 @@ starkNetDocker.loadImage(image).then((result) => {
     // console.log(`Result: ${result}`);
     if (result) {
         let directoryList = fs.readdirSync(contractsDir);
+        if (!fs.existsSync(buildDir)) {
+            fs.mkdirSync(buildDir, {recursive: true});
+        } else {
+            fs.rmdirSync(buildDir, {recursive: true, force: true});
+            fs.mkdirSync(buildDir, {recursive: true});
+        }
         console.log(`\nCompiling contracts\n===================\n`);
         for (let file of directoryList) {
             if (file.endsWith("cairo")) {
