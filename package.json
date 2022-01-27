@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "dockerode": "^3.3.1",
+    "fse": "^4.0.1",
     "node-fetch": "^2.6.7"
   }
 }

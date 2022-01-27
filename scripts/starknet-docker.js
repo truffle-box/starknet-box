@@ -40,7 +40,7 @@ class TruffleDocker {
                 try {
                     await this.pullImage(image);
                 } catch(error) {
-                    throw new DockerPullImageError(`Something went wrong while attempting to pull the image from Docker Hub: ${error.msg}`)
+                    throw new DockerPullImageError(`An error occurred while attempting to pull the image from Docker Hub: ${error.msg}`)
                 }
             } else {
                 console.log(`The requested image could not be found in the Docker Hub regsitry.`);
@@ -85,7 +85,7 @@ class TruffleDocker {
         try {
             response = await fetch(dockerRegistry);
         } catch(error) {
-            throw new DockerHubUnavailableError(`Something went wrong while querying Docker Hub: ${error.msg}`);
+            throw new DockerHubUnavailableError(`An error occurred while querying Docker Hub: ${error.msg}`);
         }
 
         // If we get a good response, the image was found in the Docker Hub registry.
@@ -123,20 +123,16 @@ class TruffleDocker {
      * @param {string} repoTag - the image for the container to run 
      * @param {array} command - an array of commands to be run
      * @param {Object} config - configuration for the container
+     * @returns {Object} - the result data from the container run
      */
-    runContainerWithCommand = (repoTag, command, config) => {
-        this._docker.run(
-            repoTag,
-            command,
-            process.stdout,
-            config
-        ).then((data) => {
-            if (data[0].StatusCode === 0) {
-                console.log(`Completed.\n`);
-            }
-        }).catch((error) => {
-            throw new DockerContainerRunError(`Something went wrong while attempting to run the container: ${error.msg}`);
-        });
+    runContainerWithCommand = async (repoTag, command, config) => {
+        let result;
+        try {
+            result = await this._docker.run(repoTag, command, process.stdout, config);
+        } catch (error) {
+            throw new DockerContainerRunError(`An error occurred while attempting to run the container: ${error}`);            
+        }
+        return result;
     }
 
     /**
@@ -163,7 +159,7 @@ class TruffleDocker {
         try {
             images = await this._docker.listImages();
         } catch(error) {
-            throw new DockerOperationError(`Something went wrong while querying docker for local images: ${error.msg}`);
+            throw new DockerOperationError(`An error occurred while querying docker for local images: ${error}`);
         }
         return images;
     }
@@ -190,7 +186,7 @@ class StarkNetDocker extends TruffleDocker {
      * @param {string} contractFile - The filename of the contract to compile.
      * @param {string} projectDir - The path to the project root directory.
      */
-    compileContract = (contractFile, projectDir) => {
+    compileContract = async (contractFile, projectDir) => {
         const outputFilename = contractFile.substring(0, contractFile.indexOf(".cairo"));
         const compiledContractFile =  `${outputFilename}_compiled.json`;
         const contractAbiFile = `${outputFilename}_abi.json`;
@@ -210,7 +206,14 @@ class StarkNetDocker extends TruffleDocker {
                 'AutoRemove': true,
             }
         };
-        this.runContainerWithCommand(repoTag, command, config);
+
+        let result;
+        try {
+            result = await this.runContainerWithCommand(repoTag, command, config);
+        } catch (error) {
+            throw new StarkNetCompilationError(`An error occurred while compiling ${contractFile}: ${error}`)
+        }
+        return result;
     }
 
     /**
@@ -219,7 +222,7 @@ class StarkNetDocker extends TruffleDocker {
      * @param {string} projectDir - The path to the project root directory.
      * @param {string} network - The StarkNet network to deploy the contract to.
      */
-    deployContract = (compiledContractFile, projectDir, network) => {
+    deployContract = async (compiledContractFile, projectDir, network) => {
         const repoTag = this._image.getRepoTag();
 
         // Docker uses an array to construct the command to be run by the container.
@@ -238,14 +241,22 @@ class StarkNetDocker extends TruffleDocker {
                 `STARKNET_NETWORK=${network}`
             ]
         };
-        this.runContainerWithCommand(repoTag, command, config);
+
+        let result;
+        try {
+            result = await this.runContainerWithCommand(repoTag, command, config);
+        } catch (error) {
+            throw new StarkNetDeploymentError(`An error occurred while deploying ${compiledContractFile}: ${error}`)
+        }
+        return result;
     }
 
     /**
      * Run the StarkNet tests
+     * @param {string} testFile - The file name of the test file to run
      * @param {string} projectDir - The path to the project root directory.
      */
-    runTests = (projectDir) => {
+    runTests = async (testFile, projectDir) => {
         
         // Get the repo:tag string for the image to run.
         const repoTag = this._image.getRepoTag();
@@ -253,7 +264,7 @@ class StarkNetDocker extends TruffleDocker {
         // Docker uses an array to construct the command to be run by the container.
         const command = [
             'pytest',
-            'test/starknet/contract_test.py'
+            `test/starknet/${testFile}`
         ];
 
         const config = {
@@ -262,7 +273,14 @@ class StarkNetDocker extends TruffleDocker {
                 'AutoRemove': true,
             }
         };
-        this.runContainerWithCommand(repoTag, command, config);
+
+        let result;
+        try {
+            result = await this.runContainerWithCommand(repoTag, command, config);
+        } catch (error) {
+            throw new StarkNetTestingError(`An error occurred while running tests in ${testFile}: ${error}`);
+        }
+        return result;
     }
 }
 
@@ -316,7 +334,7 @@ class DockerOperationError extends Error {
 
 /**
  * DockerPullError
- * This error is thrown if there is a failure in pulling an image from Docker Hub
+ * This error is thrown if there is a failure in pulling an image from Docker Hub.
  */
 class DockerPullImageError extends Error {
     constructor(msg) {
@@ -338,12 +356,45 @@ class DockerHubUnavailableError extends Error {
 
 /**
  * DockerContainerRunningError
- * This error is thrown if there is an error running a container
+ * This error is thrown if there is an error running a container.
  */
 class DockerContainerRunError extends Error {
     constructor(msg) {
         super(msg);
         this.name = "DockerContainerRunError";
+    }
+}
+
+/**
+ * StarkNetCompilationError
+ * This error is thrown if there is an error compiling a StarkNet contract.
+ */
+class StarkNetCompilationError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "StarkNetCompilationError";
+    }
+}
+
+/**
+ * StarkNetDeploymentError
+ * This error is thrown if there is an error while deploying a StarkNet contract.
+ */
+class StarkNetDeploymentError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "StarkNetDeploymentError";
+    }
+}
+
+/**
+ * StarkNetTestingError
+ * This error is thrown if there is an error while running tests on StarkNet contracts.
+ */
+class StarkNetTestingError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "StarkNetTestingError";
     }
 }
 

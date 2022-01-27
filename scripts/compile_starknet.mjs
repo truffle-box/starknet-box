@@ -1,4 +1,5 @@
-import fs, { existsSync } from 'fs';
+import fse from 'fse';
+
 import { Image, StarkNetDocker } from './starknet-docker.js';
 
 import starknetConfig from '../truffle-config.starknet.js';
@@ -8,30 +9,34 @@ const compiler_version = starknetConfig.compilers.cairo.version;
 const image = new Image(compiler_repo,compiler_version);
 const starkNetDocker = new StarkNetDocker(image);
 
+const projectDir = process.cwd();
 const contractsDir = starknetConfig.contracts_directory;
 const buildDir = starknetConfig.contracts_build_directory;
-const currentDir = process.cwd();
 
-starkNetDocker.loadImage(image).then((result) => {
-    // Get list of cairo contract files from the contracts/starknet directory and compile them
-    // console.log(`Result: ${result}`);
-    if (result) {
-        let directoryList = fs.readdirSync(contractsDir);
-        if (!fs.existsSync(buildDir)) {
-            fs.mkdirSync(buildDir, {recursive: true});
-        } else {
-            fs.rmdirSync(buildDir, {recursive: true, force: true});
-            fs.mkdirSync(buildDir, {recursive: true});
-        }
-        console.log(`\nCompiling contracts\n===================\n`);
-        for (let file of directoryList) {
-            if (file.endsWith("cairo")) {
-                console.log(`Compiling ${file}`);
-                starkNetDocker.compileContract(file, currentDir);
+// Attempt to load the specified docker image
+const imageLoaded = starkNetDocker.loadImage(image);
+
+if (imageLoaded) {
+    let directoryList = fse.readdirSync(contractsDir);
+    if (!fse.existsSync(buildDir)) {
+        fse.mkdirSync(buildDir, {recursive: true});
+    } else {
+        fse.rmdirSync(buildDir, {recursive: true, force: true});
+        fse.mkdirSync(buildDir, {recursive: true});
+    }
+
+    console.log(`\nCompiling contracts\n===================\n`);
+    for (let file of directoryList) {
+        if (file.endsWith("cairo")) {
+            console.log(`Compiling ${file}`);
+            const result = await starkNetDocker.compileContract(file, projectDir);
+            if (result[0].StatusCode === 0) {
+                console.log(`Compilation complete.\n`);
+            } else {
+                console.log(`There was an error compiling ${contractFile}`);
             }
         }
-    } else {
-        console.log(`Unable to continue. The requested image was not found locally of on Docker Hub.`);
     }
-});
-
+} else {
+    console.log(`Unable to continue. The requested image could not be located. Requested image: ${image.getRepoTag()}`);
+}

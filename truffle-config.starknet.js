@@ -22,7 +22,6 @@ module.exports = {
   },
 
   // Configure your Cairo compilers
-  // Presently the only supported version of the Cairo/StarkNet compiler is 0.6.2
   compilers: {
     cairo: {
       repository: "dkillen/cairo-starknet-cli",   // Docker Hub repository
