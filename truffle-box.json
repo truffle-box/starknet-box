@@ -1,6 +1,6 @@
 {
   "ignore": ["README.md", ".gitignore"],
   "hooks": {
-    "post-unpack": "npm install --loglevel=error && touch .env"
+    "post-unpack": "npm install --loglevel=error && mkdir starknet_accounts"
   }
 }

@@ -8,9 +8,10 @@
   },
   "scripts": {
     "test": "",
-    "compile:starknet": "node ./scripts/compile_starknet.mjs",
-    "deploy:starknet": "node ./scripts/deploy_starknet.mjs",
-    "test:starknet": "node ./scripts/test_starknet.mjs"
+    "starknet:deploy_account": "node ./scripts/deploy_account.mjs",
+    "starknet:compile": "node ./scripts/compile_starknet.mjs",
+    "starknet:deploy": "node ./scripts/deploy_starknet.mjs",
+    "starknet:test": "node ./scripts/test_starknet.mjs"
   },
   "repository": {
     "type": "git",
