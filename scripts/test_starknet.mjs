@@ -13,7 +13,7 @@ const projectDir = process.cwd();
 const testDir = projectDir + '/test/starknet';
 
 // Attempt to load the specified docker image
-const imageLoaded = starkNetDocker.loadImage(image);
+const imageLoaded = await starkNetDocker.loadImage(image);
 
 if (imageLoaded) {
     let directoryList = fse.readdirSync(testDir);
