@@ -10,5 +10,5 @@ node_modules
 __pycache__
 .pytest_cache
 
-# StarkNet accounts
-starknet_accounts
+# Docker image
+cairo-starknet-cli-docker
