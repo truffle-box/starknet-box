@@ -17,7 +17,7 @@ const accounts_dir = starknetConfig.starknet_accounts_directory;
 const network = starknetConfig.networks.testnet.network_id;
 
 // Attempt to load the specified docker image
-const imageLoaded = starkNetDocker.loadImage(image);
+const imageLoaded = await starkNetDocker.loadImage(image);
 
 if (imageLoaded){
     // Get list of compiled contract files from the starknet contracts build directory

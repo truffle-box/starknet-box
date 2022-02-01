@@ -16,7 +16,7 @@ const accounts_dir = starknetConfig.starknet_accounts_directory;
 const network = starknetConfig.networks.testnet.network_id;
 
 // Attempt to load the specified docker image
-const imageLoaded = starkNetDocker.loadImage(image);
+const imageLoaded = await starkNetDocker.loadImage(image);
 
 if (imageLoaded){
     // Create the StarkNet accounts directory if it doesn't already exist.

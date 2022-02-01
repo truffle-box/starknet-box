@@ -14,7 +14,7 @@ const buildDir = starknetConfig.contracts_build_directory;
 const contractsDir = starknetConfig.contracts_directory;
 
 // Attempt to load the specified docker image
-const imageLoaded = starkNetDocker.loadImage(image);
+const imageLoaded = await starkNetDocker.loadImage(image);
 
 if (imageLoaded) {
     // Clean up or create build directory for compilation artifacts
