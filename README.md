@@ -1,7 +1,7 @@
 # StarkNet Box
 This Truffle StarkNet Box provides you with the boilerplate structure necessary to start coding for StarkWare's Ethereum L2 solution, StarNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
 
-This box provides a simple cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version 0.7.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
+This box provides a simple Cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version 0.7.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
 ## Requirements
 The StarkNet Box has the following requirements:
 - [Node.js](https://nodejs.org/) 14.18.2 or later
@@ -24,17 +24,17 @@ truffle unbox starknet
 Included with this Box is a StarkNet configuration file: `truffle-config.starknet.js`. This file contains a reference to the new file location of the contracts_build_directory and contracts_directory for StarkNet contracts, and the starknet_accounts_directory where the box will store keys for StarkNet accounts used during development. It also configures the StarkNet network on Goerli Testnet as the network to which compiled contracts will be deployed.
 
 Please note, the classic truffle-config.js configuration file is included here as well, because you will eventually want to deploy contracts to Ethereum as well. All normal truffle commands (truffle compile, truffle migrate, etc.) will use this config file and save built files to build/ethereum-contracts. You can save Solidity contracts that you wish to deploy to Ethereum in the contracts/ethereum folder.
-### New Directory Structure for Artifacts
+### Directory Structure for Artifacts
 When you compile StarkNet contracts, the resulting json files will be at build/starknet-contracts/. This is to distinguish them from any Ethereum contracts you build, which will live in build/ethereum-contracts. As we have included the appropriate contracts_build_directory in each configuration file, Truffle will know which set of built files to reference!
 ## StarkNet
 The following commands will use the `truffle-config.starknet.js` configuration file. Each command makes use of a docker image built to provide the Cairo compiler without the need for setting up a Python development environment. The scripts will first query docker for a local copy of the image, and if it isn't found will attempt to pull the image from a Docker Hub repository. The Docker container resulting from running the image should be removed after an operation is complete.
 
 ### Accounts
-Externally-owned (user) accounts on StarkNet differ from those of the Ethereum network. A StarkNet account requires the deployment of an account contract to the StarkNet network. The StarkNet CLI provides a simple method of deploying an account contract for development purposes. This currently uses the [OpenZeppelin Cairo account contract](https://github.com/OpenZeppelin/cairo-contracts/blob/main/contracts/Account.cairo). The `truffle-config.starknet.js` configuration file defines a location for storing account information for accounts deployed while using the box. By default this is the ./starknet_accounts directory. You should ensure that this directory is included in your project's .gitignore file to avoid accidentally commiting your account keys to a public source code repository.
+Externally-owned (user) accounts on StarkNet differ from those of the Ethereum network. A StarkNet account requires the deployment of an account contract to the StarkNet network. The StarkNet CLI provides a simple method of deploying an account contract for development purposes. This currently uses the [OpenZeppelin Cairo account contract](https://github.com/OpenZeppelin/cairo-contracts/blob/main/contracts/Account.cairo). The `truffle-config.starknet.js` configuration file defines a location for storing account information for accounts deployed while using the box. By default this is the ./starknet_accounts directory. **You should ensure that this directory is included in your project's .gitignore file to avoid accidentally commiting your account keys to a public source code repository.**
 
 Accounts deployed with this box have their own location and configuration seperate to any other StarkNet accounts that you may have deployed in another StarkNet environment. Currently, this box only supports the deployment of a single default account which will be used for any interactions where an account is necessary or desirable.
 
-**WARNING: never use an account deployed with the StarkNet CLI in production as its private key is stored on your system in plaintext and can be easily compromised.**
+**WARNING: never use an account deployed with the StarkNet CLI in production as its private key is stored on your system in plaintext. It can be easily compromised and your funds stolen.**
 
 To deploy a StarkNet account, run the following command in your terminal:
 ```bash
