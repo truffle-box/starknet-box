@@ -32,7 +32,7 @@ module.exports = {
   // Configure your Cairo compilers
   compilers: {
     cairo: {
-      repository: "dkillen/cairo-starknet-cli",   // Docker Hub repository
+      repository: "trufflesuite/cairo-starknet-cli",   // Docker Hub repository
       version: "0.7.0",                           // Version tag
     }
   }
