@@ -21,12 +21,18 @@ module.exports = {
   starknet_accounts_directory: './starknet_accounts',
 
   networks: {
+    // develop: {
+    //   url: "http://localhost:5000",
+    // },
     testnet: {
-      network_id: "alpha-goerli",       // Any network (default: none)
+      network_id: "alpha-goerli",
     },
     // mainnet: {
     //   network_id: "alpha-mainnet"
-    // }
+    // },
+    default: {
+      network: "testnet",
+    },
   },
 
   // Configure your Cairo compilers
