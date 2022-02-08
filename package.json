@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "",
-    "starknet:deploy_account": "node ./scripts/deploy_account.mjs",
+    "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
     "starknet:compile": "node ./scripts/compile_starknet.mjs",
-    "starknet:deploy": "node ./scripts/deploy_starknet.mjs",
+    "starknet:deploy": "node ./scripts/deploy_starknet.mjs --network=$npm_config_network",
     "starknet:test": "node ./scripts/test_starknet.mjs"
   },
   "repository": {
@@ -38,6 +38,7 @@
   "dependencies": {
     "dockerode": "^3.3.1",
     "fse": "^4.0.1",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "yargs": "^17.3.1"
   }
 }
