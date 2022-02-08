@@ -29,6 +29,26 @@ When you compile StarkNet contracts, the resulting json files will be at build/s
 ## StarkNet
 The following commands will use the `truffle-config.starknet.js` configuration file. Each command makes use of a docker image built to provide the Cairo compiler without the need for setting up a Python development environment. The scripts will first query docker for a local copy of the image, and if it isn't found will attempt to pull the image from a Docker Hub repository. The Docker container resulting from running the image should be removed after an operation is complete.
 
+### Networks
+StarkNet, by default, defines two networks `alpha-goerli` and `alpha-mainnet`. In this box, networks are configured in the `truffle-config.starknet.js` configuration file. For example:
+```bash
+  networks: {
+    testnet: {
+      network_id: "alpha-goerli",
+    },
+    mainnet: {
+      network_id: "alpha-mainnet"
+    },
+    default: {
+      network: "testnet",
+    },
+  },
+```
+A default network may also be configured. The default network is simply a reference to another network that has been configured and which the user wishes to use as the default network for all commands. A network can be specified on the command-line by using the `--network` argument. For example:
+```bash
+npm run starknet:deploy_account --network=testnet
+```
+If the `--network` argument is not supplied the default network will be used as the target for the command. If no default network is specified in the configuration the `alpha-goerli` network will be used.
 ### Accounts
 Externally-owned (user) accounts on StarkNet differ from those of the Ethereum network. A StarkNet account requires the deployment of an account contract to the StarkNet network. The StarkNet CLI provides a simple method of deploying an account contract for development purposes. This currently uses the [OpenZeppelin Cairo account contract](https://github.com/OpenZeppelin/cairo-contracts/blob/main/contracts/Account.cairo). The `truffle-config.starknet.js` configuration file defines a location for storing account information for accounts deployed while using the box. By default this is the ./starknet_accounts directory. **You should ensure that this directory is included in your project's .gitignore file to avoid accidentally commiting your account keys to a public source code repository.**
 
@@ -39,16 +59,24 @@ Accounts deployed with this box have their own location and configuration sepera
 To deploy a StarkNet account, run the following command in your terminal:
 ```bash
 npm run starknet:deploy_account
-``` 
+```
+or, you may specify a network target with the `--network` argument:
+```bash
+npm run starknet:deploy_account --network=testnet
+```
 ### Compiling
 To compile your StarkNet contracts using the Cairo compiler, run the following in your terminal:
 ```bash
 npm run starknet:compile
 ```
 ### Deploying
-To deploy your compiled StarkNet contracts to the StarkNet network on Goerli Testnet, run the following in your terminal:
+To deploy your compiled StarkNet contracts, run the following in your terminal:
 ```bash
 npm run starknet:deploy
+```
+or, you may specify a network target with the `--network` argument:
+```bash
+npm run starknet:deploy --network=testnet
 ```
 ## Basic Commands
 The code here will allow you to compile, deploy, and test your code against a simulation of a StarkNet network. The following commands can be run:
