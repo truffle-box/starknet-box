@@ -34,12 +34,16 @@ module.exports = {
       network: "testnet",
     },
   },
-
   // Configure your Cairo compilers
   compilers: {
     cairo: {
       repository: "trufflesuite/cairo-starknet-cli",   // Docker Hub repository
-      version: "0.7.0",                           // Version tag
+      version: "0.7.1",                           // Version tag
     }
-  }
+  },
+  // Configuration for StarkNet DevNet
+  devnet: {
+    repository: "shardlabs/starknet-devnet",
+    version: "0.1.14",
+  },
 };

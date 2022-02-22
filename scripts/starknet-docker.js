@@ -54,6 +54,7 @@ class TruffleDocker {
     isImageLocal = async (image) => {
         // Get the repo:tag string for the image and iterate through the images
         // in the local repo to check if the one we're interested in exists
+        let isLocalImage = false;
         const repoTag = image.getRepoTag();
         const localImages = await this._listLocalImages();
 
@@ -61,11 +62,11 @@ class TruffleDocker {
             const tags = image.RepoTags;
             for (let tag of tags) {
                 if (tag == repoTag) {
-                    return true;
+                    isLocalImage = true;
                 }
             }
         }
-        return false;
+        return isLocalImage;
     }
 
     /**
@@ -115,7 +116,17 @@ class TruffleDocker {
     }
 
     /**
-     * Run a docker container from an image
+     * Run a docker container from an image.
+     * @param {string} repoTag 
+     * @param {Object} config 
+     */
+    runContainer = async (repoTag, config) => {
+        const data = await this._docker.run(repoTag, [], process.stdout, config);
+        return data;
+    }
+
+    /**
+     * Run a docker container from an image and execute a command
      * @param {string} repoTag The image for the container to run 
      * @param {array} command An array of commands to be run
      * @param {Object} config Configuration for the container
@@ -124,6 +135,14 @@ class TruffleDocker {
     runContainerWithCommand = async (repoTag, command, config) => {
         const result = await this._docker.run(repoTag, command, process.stdout, config);
         return result;
+    }
+
+    /**
+     * Stops a running docker container
+     * @param {string} container The id of the container to stop
+     */
+    stopContainer = (container) => {
+        this._docker.getContainer(container).stop();
     }
 
     /**
@@ -321,6 +340,62 @@ class StarkNetDocker extends TruffleDocker {
 }
 
 /**
+ * StarkNetDevnetDocker
+ */
+class StarkNetDevnetDocker extends TruffleDocker {
+
+    /**
+     * StarkNetDocker extneds TruffleDocker to provide methods for compiling 
+     * and interacting with Cairo/StarkNet contracts.
+     * @constructor
+     * @param {Image} image - The Docker image to be used.
+     */
+    constructor(image) {
+        super();
+        this._image = image;
+    }
+
+    runDevnet = async () => {
+        // Get the repo:tag string for the image to run.
+        const repoTag = this._image.getRepoTag();
+
+        // docker run -it -p 127.0.0.1:5000:5000 shardlabs/starknet-devnet
+        const config = {
+            "name": "starknet-devnet",
+            "AttachStdin": true,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": true,
+            "OpenStdin": true,
+            "StdinOnce": true,
+            "ExposedPorts": {
+                "5000/tcp": {}
+            },
+            "Hostconfig": {
+                "PortBindings": {
+                    "5000/tcp": [
+                        {
+                            "HostIp": "127.0.0.1",
+                            "HostPort": "5000"
+                        }
+                    ]
+                },
+                "NetworkMode": "default",
+                "Autoremove": true
+            }
+        };
+
+        let result;
+        try {
+            result = await this.runContainer(repoTag, config);            
+        } catch (error) {
+            throw new StarkNetDevnetError(`An error occured while starting Devnet: ${error}`);
+        }
+        return result;
+    };
+} 
+
+/**
  * Image class
  */
 class Image {
@@ -434,4 +509,11 @@ class StarkNetTestingError extends Error {
     }
 }
 
-module.exports = {Image, TruffleDocker, StarkNetDocker};
+class StarkNetDevnetError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "StarkNetDevnetError";
+    }
+}
+
+module.exports = {Image, TruffleDocker, StarkNetDocker, StarkNetDevnetDocker};
