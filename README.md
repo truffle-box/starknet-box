@@ -151,8 +151,7 @@ In the Devnet console, output similar to the following should be displayed:
 ```bash
 starknet tx_status --no_wallet \
 --gateway_url http://127.0.0.1:5000/gateway/ \
---feeder_gateway_url http://127.0.0.
-1:5000/feeder_gateway/ \
+--feeder_gateway_url http://127.0.0.1:5000/feeder_gateway/ \
 --hash 0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f5d0e
 ```
 Again, the Devnet console will display output similar to the following:
@@ -163,8 +162,7 @@ Again, the Devnet console will display output similar to the following:
 ```bash
 starknet invoke --no_wallet \
 --gateway_url http://127.0.0.1:5000/gateway/ \
---feeder_gateway_url http://127.0.0.1:5
-000/feeder_gateway/ \
+--feeder_gateway_url http://127.0.0.1:5000/feeder_gateway/ \
 --address 0x040ac735fce2af86b335ac0db11ddf1d9d956cc577f02cf0ea6ed8c06119cdce \
 --abi ./build/contract_abi.json \
 --function increase_balance \
