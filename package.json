@@ -1,6 +1,6 @@
 {
   "name": "starknet-box",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Boilerplate proof of concept to compile, migrate, and perform L1 <-> L2 interactions on StarkNet.",
   "main": "truffle-config.starknet.js",
   "directories": {
@@ -11,7 +11,8 @@
     "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
     "starknet:compile": "node ./scripts/compile_starknet.mjs",
     "starknet:deploy": "node ./scripts/deploy_starknet.mjs --network=$npm_config_network",
-    "starknet:test": "node ./scripts/test_starknet.mjs"
+    "starknet:test": "node ./scripts/test_starknet.mjs",
+    "starknet:start_devnet": "node ./scripts/start_devnet.mjs"
   },
   "repository": {
     "type": "git",
