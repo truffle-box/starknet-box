@@ -37,6 +37,7 @@
     "dotenv": "^10.0.0"
   },
   "dependencies": {
+    "chalk": "^5.0.1",
     "dockerode": "^3.3.1",
     "fse": "^4.0.1",
     "node-fetch": "^2.6.7",

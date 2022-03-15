@@ -1,6 +1,11 @@
 import fse from 'fse';
-import { Image, StarkNetDocker } from './starknet-docker.js';
+import { Image } from './truffle_docker.mjs';
+import { StarkNetDocker } from './starknet_docker.mjs';
 import starknetConfig from '../truffle-config.starknet.js';
+
+// Pretty log output
+import { Logger } from './logging.mjs';
+const logger = new Logger();
 
 // Docker configurations
 const compiler_repo = starknetConfig.compilers.cairo.repository;
@@ -25,23 +30,26 @@ if (imageLoaded) {
         fse.mkdirSync(buildDir, {recursive: true});
     }
     
-    console.log(`Compiling all Cairo contracts in the ${contractsDir} directory.`);
+    logger.logInfo(`Compiling all Cairo contracts in the ${contractsDir} directory.`);
+    logger.logHeader();
+    
     let directoryList = fse.readdirSync(contractsDir);
     for (let file of directoryList) {
         if (file.endsWith("cairo")) {
-            console.log(`Compiling ${file}`);
+            logger.logWork(`Compiling ${file}`);
             let result;
             try {
                 result = await starkNetDocker.compileContract(file, projectDir);
             } catch (error) {
-                console.log(error.msg);
+                logger.logError(error.msg);
             }
             if (result[0].StatusCode !== 0) {
-                console.log(`There was an error compiling ${contractFile}`);
+                logger.logError('\nThere was an error compiling: ', file + '\n');
             }
         }
     }
-    console.log(`Compilation complete.`);
+    logger.logFooter();
+    logger.logInfo('Compilation complete.');
 } else {
-    console.log(`Unable to continue. The docker image could not be located. Requested image: ${image.getRepoTag()}`);
+    logger.logError('\nUnable to continue. The docker image could not be located. Requested image: ', image.getRepoTag() + '\n');
 }

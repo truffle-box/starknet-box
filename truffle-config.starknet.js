@@ -21,15 +21,16 @@ module.exports = {
   starknet_accounts_directory: './starknet_accounts',
 
   networks: {
-    // develop: {
-    //   url: "http://localhost:5000",
-    // },
     testnet: {
       network_id: "alpha-goerli",
     },
     // mainnet: {
     //   network_id: "alpha-mainnet"
     // },
+    devnet: {
+      gateway_url: "http://127.0.0.1:5000/gateway/",
+      feeder_gateway_url: "http://127.0.0.1:5000/feeder_gateway/"
+    },
     default: {
       network: "testnet",
     },
@@ -37,13 +38,13 @@ module.exports = {
   // Configure your Cairo compilers
   compilers: {
     cairo: {
-      repository: "trufflesuite/cairo-starknet-cli",   // Docker Hub repository
-      version: "0.7.1",                           // Version tag
+      repository: "trufflesuite/cairo-starknet-cli",  // Docker Hub repository
+      version: "0.8.0",                               // Version tag
     }
   },
   // Configuration for StarkNet DevNet
   devnet: {
     repository: "shardlabs/starknet-devnet",
-    version: "0.1.14",
+    version: "0.1.18",
   },
 };
