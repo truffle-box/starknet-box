@@ -169,7 +169,8 @@ starknet invoke --no_wallet \
 --inputs 1234
 ```
 This will produce output similar to the following in the Devnet console:
-```bash 172.17.0.1 - - [22/Feb/2022 04:04:22] "POST /gateway/add_transaction HTTP/1.1" 200 -
+```bash 
+172.17.0.1 - - [22/Feb/2022 04:04:22] "POST /gateway/add_transaction HTTP/1.1" 200 -
 ```
 ### Calling a contract function
 ```bash

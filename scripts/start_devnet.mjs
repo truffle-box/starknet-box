@@ -1,4 +1,10 @@
-import { Image, StarkNetDevnetDocker } from './starknet-docker.js';
+import { Image } from './truffle_docker.mjs';
+import { StarkNetDevnetDocker } from './starknet_devnet_docker.mjs';
+
+// Pretty log output
+import { Logger } from './logging.mjs';
+const logger = new Logger();
+
 import starknetConfig from '../truffle-config.starknet.js';
 
 const devnet_repo = starknetConfig.devnet.repository;
@@ -11,15 +17,15 @@ let imageLoaded = false;
 try {
     imageLoaded = await starknetDevnetDocker.loadImage(image);
 } catch (error) {
-    console.log(`An error occurred while attempting to load the Docker image: ${error.msg}`);
+    logger.logError('An error occurred while attempting to load the Docker image: ', error.msg);
 }
 
 if (imageLoaded) {
     try {
         await starknetDevnetDocker.runDevnet();
     } catch (error) {
-        console.log(`An error occurred while attempting to deploy a contract: ${error.msg}`);
+        logger.logError('An error occurred while attempting to run devnet: ', error.msg);
     }
 } else {
-    console.log(`Unable to continue. The docker image could not be located. Requested image: ${image.getRepoTag()}`);
+    logger.logError('Unable to continue. The docker image could not be located. Requested image: ', image.getRepoTag());
 }

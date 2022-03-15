@@ -1,6 +1,7 @@
 import fse from 'fse';
 
-import { Image, StarkNetDocker } from './starknet-docker.js';
+import { Image } from './truffle_docker.mjs';
+import { StarkNetDocker } from './starknet_docker.mjs';
 
 import starknetConfig from '../truffle-config.starknet.js';
 

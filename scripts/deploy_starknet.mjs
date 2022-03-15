@@ -1,8 +1,13 @@
 import fse from 'fse';
 import yargs from 'yargs';
 
-import { Image, StarkNetDocker } from './starknet-docker.js';
+import { Image } from './truffle_docker.mjs';
+import { StarkNetDocker } from './starknet_docker.mjs';
 import starknetConfig from '../truffle-config.starknet.js';
+
+// Pretty log output
+import { Logger } from './logging.mjs';
+const logger = new Logger();
 
 // Docker configuration
 const compiler_repo = starknetConfig.compilers.cairo.repository;
@@ -33,44 +38,47 @@ if (networkArg) {
     if (networks.hasOwnProperty(networkArg)) {
         network = networks[networkArg].network_id;
     } else {
-        console.log(`The specified network is not configured. Using the default network: ${defaultNetwork}.`);
+        logger.logInfo('The specified network is not configured. Using the default network: ', defaultNetwork);
         network = defaultNetwork;
     }
 } else {
     // The user has not selected a specific network - use the default;
-    console.log(`No network specified. Using the default network: ${defaultNetwork}.`);
+    logger.logInfo('No network specified. Using the default network: ', defaultNetwork);
     network = defaultNetwork;
 }
-console.log(`Network: ${network}`);
+logger.logInfo('Network: ', network);
 
 // Attempt to load the specified docker image
 let imageLoaded = false;
 try {
     imageLoaded = await starkNetDocker.loadImage(image);
 } catch (error) {
-    console.log(`An error occurred while attempting to load the Docker image: ${error.msg}`);
+    logger.logError('An error occurred while attempting to load the Docker image: ', error.msg);
 }
 
 if (imageLoaded){
     // Get list of compiled contract files from the starknet contracts build directory
     // It is exptected that the compiled contract filenames will have the form contract-name_compiled.json
     let directoryList = fse.readdirSync(buildDir);
-    console.log(`Deploying all Cairo contracts in the ${buildDir} directory.`);
+    
+    logger.logInfo(`Deploying all Cairo contracts in the ${buildDir} directory.`);
+    logger.logHeader();
+    
     for (let file of directoryList) {
         let result;
         if (file.endsWith("_compiled.json")) {
-            console.log(`Deploying ${file}`);
+            logger.logWork('Deploying: ', file);
             let result;
             try {
                 result = await starkNetDocker.deployContract(accounts_dir, file, projectDir, network);
             } catch (error) {
-                console.log(`An error occurred while attempting to deploy a contract: ${error.msg}`);
+                logger.logError('An error occurred while attempting to deploy a contract: ', error.msg);
             }
             if (result[0].StatusCode !== 0) {
-                console.log(`There was an error deploying: ${file}`);
+                logger.logError('There was an error deploying: ', file);
             }
         }
     }
 } else {
-    console.log(`Unable to continue. The docker image could not be located. Requested image: ${image.getRepoTag()}`);
+    logger.logError('Unable to continue. The docker image could not be located. Requested image: ', image.getRepoTag());
 }
