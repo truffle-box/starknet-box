@@ -77,14 +77,14 @@ class StarkNetAccountCreationError extends Error {
  * There is an error compiling a StarkNet contract.
  * @extends Error
  */
-class StarkNetCompilationError extends Error {
+class StarkNetCompileError extends Error {
     /**
      * @constructor
      * @param {string} message - Error message. 
      */
      constructor(message) {
         super(message);
-        this.name = "StarkNetCompilationError";
+        this.name = "StarkNetCompileError";
     }
 }
 
@@ -139,7 +139,7 @@ export {
     DockerOperationError, 
     DockerPullError, 
     StarkNetAccountCreationError, 
-    StarkNetCompilationError, 
+    StarkNetCompileError, 
     StarkNetDeploymentError, 
     StarkNetDevnetError, 
     StarkNetTestingError 

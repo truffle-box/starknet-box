@@ -53,7 +53,7 @@ let imageLoaded = false;
 try {
     imageLoaded = await starkNetDocker.loadImage(image);
 } catch (error) {
-    logger.logError('An error occurred while attempting to load the Docker image: ', error.msg);
+    logger.logError(`An error occurred while trying to load the Docker image: ${error.message}`);
 }
 
 if (imageLoaded){
@@ -68,7 +68,7 @@ if (imageLoaded){
     try {
         result = await starkNetDocker.createAccount(accounts_dir, projectDir, network);
     } catch (error) {
-        logger.logError(error.msg);
+        logger.logError(`An error occurred while attempting to deploy the account contract: ${error.message}`);
     }
     if (result[0].StatusCode !== 0) {
         logger.logError('\nThere was an error deploying the account.\n');

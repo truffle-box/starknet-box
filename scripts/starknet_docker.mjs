@@ -2,7 +2,7 @@ import { Image } from './truffle_docker.mjs';
 import { TruffleDocker } from './truffle_docker.mjs';
 import { 
     StarkNetAccountCreationError,
-    StarkNetCompilationError,
+    StarkNetCompileError,
     StarkNetDeploymentError,
     StarkNetTestingError
 } from './errors.mjs';
@@ -30,6 +30,7 @@ import {
      * @param {string} network - The StarkNet network to deploy the account to.
      * @param {string} accountName - The name of the account to be created (optional).
      * @returns {Object} The results of running the Docker container.
+     * @throws {StarkNetAccountCreationError} An error occurred while deploying the account.
      */
     createAccount = async (accountsDir, projectDir, network, accountName) => {
         const repoTag = this._image.getRepoTag();
@@ -70,6 +71,7 @@ import {
      * @param {string} contractFile - The filename of the contract to compile.
      * @param {string} projectDir - The path to the project root directory.
      * @returns {Object} The results of running the Docker container.
+     * @throws {StarkNetCompileError} An error occurred while compiling a contract.
      */
     compileContract = async (contractFile, projectDir) => {
         const outputFilename = contractFile.substring(0, contractFile.indexOf(".cairo"));
@@ -95,7 +97,7 @@ import {
         try {
             result = await this.runContainerWithCommand(repoTag, command, config);
         } catch (error) {
-            throw new StarkNetCompilationError(`An error occurred while compiling ${contractFile}: ${error}`);
+            throw new StarkNetCompileError(`An error occurred while compiling ${contractFile}: ${error}`);
         }
         return result;
     }
@@ -108,6 +110,7 @@ import {
      * @param {string} projectDir - The path to the project root directory.
      * @param {string} network - The StarkNet network to deploy the contract to.
      * @returns {Object} The results of running the Docker container.
+     * @throws {StarkNetDeploymentError} An error occurred while deploying a contract.
      */
     deployContract = async (accountsDir, compiledContractFile, projectDir, network) => {
         const repoTag = this._image.getRepoTag();
@@ -144,6 +147,7 @@ import {
      * @param {string} testFile - The file name of the test file to run.
      * @param {string} projectDir - The path to the project root directory.
      * @returns {Object} The results of running the Docker container.
+     * @throws {StarkNetTestingError} An error occurred while running tests.
      */
     runTests = async (testFile, projectDir) => {
         // Get the repo:tag string for the image to run.

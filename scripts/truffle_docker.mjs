@@ -30,6 +30,8 @@ import {
      * @method
      * @param {Image} image - The Docker image to search Docker Hub for.
      * @returns {boolean} True if the image is found on the local machine or was pulled from Docker Hub.
+     * @throws {DockerOperationError} An error occurred while querying docker for local images.
+     * @throws {DockerPullError} An error occurred while attempting to pull the image from Docker Hub.
      */
     loadImage = async (image) => {
         // Check for the image locally
@@ -41,7 +43,7 @@ import {
         }
         // It's not local, try to pull from Docker Hub
         if (!isLocal) {
-            console.log(`Image not available locally. Pulling image from ${image.repository}:${image.tag}`);
+            console.log(`The docker image was not found locally. Attempting to pull the image from Docker Hub: ${image.repository}:${image.tag}`);
             try {
                 await this.pullImage(image);
             } catch(error) {
@@ -96,6 +98,7 @@ import {
      * @method
      * @param {Image} image - The image to pull from Docker Hub.
      * @returns {Promise} Resolves if the image is pulled successfully.
+     * @throws {DockerHubError} An error occurred while querying Docker Hub.
      */
     pullImage = async (image) => {
         const repoTag = image.getRepoTag();
@@ -147,9 +150,14 @@ import {
      * Stops a running docker container.
      * @method
      * @param {string} container - The id of the container to stop.
+     * @throws {DockerOperationError} An error occurred while attempting to stop a container.
      */
     stopContainer = (container) => {
-        this._docker.getContainer(container).stop();
+        try {
+            this._docker.getContainer(container).stop();
+        } catch (error) {
+            throw new DockerOperationError(`An error occurred while attempting to stop a docker container: ${error.message}`);
+        }
     }
 
     /**

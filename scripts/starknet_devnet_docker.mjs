@@ -20,6 +20,7 @@ import { StarkNetDevnetError } from './errors.mjs';
      * Spins up the StarkNet Devnet container ready for use.
      * @method
      * @returns {Object} The results of running the Docker container.
+     * @throws {StarkNetDevnetError} An error occured while starting Devnet.
      */
     runDevnet = async () => {
         // Get the repo:tag string for the image to run.

@@ -53,7 +53,7 @@ let imageLoaded = false;
 try {
     imageLoaded = await starkNetDocker.loadImage(image);
 } catch (error) {
-    logger.logError('An error occurred while attempting to load the Docker image: ', error.msg);
+    logger.logError(`An error occurred while trying to load the Docker image: ${error.message}`);
 }
 
 if (imageLoaded){
@@ -72,7 +72,7 @@ if (imageLoaded){
             try {
                 result = await starkNetDocker.deployContract(accounts_dir, file, projectDir, network);
             } catch (error) {
-                logger.logError('An error occurred while attempting to deploy a contract: ', error.msg);
+                logger.logError(`An error occurred while attempting to deploy a contract: ${error.message}`);
             }
             if (result[0].StatusCode !== 0) {
                 logger.logError('There was an error deploying: ', file);

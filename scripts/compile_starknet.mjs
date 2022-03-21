@@ -19,7 +19,12 @@ const buildDir = starknetConfig.contracts_build_directory;
 const contractsDir = starknetConfig.contracts_directory;
 
 // Attempt to load the specified docker image
-const imageLoaded = await starkNetDocker.loadImage(image);
+let imageLoaded = false;
+try {
+    imageLoaded = await starkNetDocker.loadImage(image);
+} catch (error) {
+    logger.logError(`An error occurred while trying to load the Docker image: ${error.message}`);
+}
 
 if (imageLoaded) {
     // Clean up or create build directory for compilation artifacts
@@ -41,7 +46,7 @@ if (imageLoaded) {
             try {
                 result = await starkNetDocker.compileContract(file, projectDir);
             } catch (error) {
-                logger.logError(error.msg);
+                logger.logError(`An error occurred while trying to compile a contract: ${error.message}`);
             }
             if (result[0].StatusCode !== 0) {
                 logger.logError('\nThere was an error compiling: ', file + '\n');
