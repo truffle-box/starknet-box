@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "",
+    "docs": "node_modules/jsdoc/jsdoc.js -c ./.jsdoc.conf.json",
     "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
     "starknet:compile": "node ./scripts/compile_starknet.mjs",
     "starknet:deploy": "node ./scripts/deploy_starknet.mjs --network=$npm_config_network",
@@ -34,7 +35,8 @@
   "homepage": "https://github.com/truffle-box/starknet-box#readme",
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.4.1",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "jsdoc": "^3.6.10"
   },
   "dependencies": {
     "chalk": "^5.0.1",

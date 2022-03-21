@@ -2,13 +2,13 @@ import { TruffleDocker } from './truffle_docker.mjs';
 import { StarkNetDevnetError } from './errors.mjs';
 
 /**
- * StarkNetDevnetDocker class 
- * A class providing methods for running a StarkNet Devnet container 
+ * A class providing methods for running a StarkNet Devnet container.
+ * @extends TruffleDocker
  */
  class StarkNetDevnetDocker extends TruffleDocker {
-
     /**
-     * Create a StarkNetDevnetDocker object
+     * Create a StarkNetDevnetDocker object.
+     * @constructor
      * @param {Image} image - The Docker image to be run.
      */
     constructor(image) {
@@ -17,13 +17,14 @@ import { StarkNetDevnetError } from './errors.mjs';
     }
 
     /**
-     * Spins up the StarkNet Devnet container ready for use
+     * Spins up the StarkNet Devnet container ready for use.
+     * @method
      * @returns {Object} The results of running the Docker container.
+     * @throws {StarkNetDevnetError} An error occured while starting Devnet.
      */
     runDevnet = async () => {
         // Get the repo:tag string for the image to run.
         const repoTag = this._image.getRepoTag();
-
         // docker run -it -p 127.0.0.1:5000:5000 shardlabs/starknet-devnet
         const config = {
             "name": "starknet-devnet",
