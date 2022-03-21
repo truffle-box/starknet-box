@@ -1,4 +1,27 @@
 # StarkNet Box
+- [Requirement](#requirements)
+- [Installation](#installation)
+- [Setup](#setup)
+  - [Configuration](#configuration)
+  - [Directory Structure for Artifacts](#directory-structure-for-artifacts)
+- [StarkNet](#starknet)
+  - [Networks](#networks)
+  - [Accounts](#accounts)
+  - [Compiling](#compiling)
+  - [Deploying](#deploying)
+- [Basic Commands](#basic-commands)
+  - [Testing](#testing)
+  - [Communication between StarkNet Layer 1 and Layer 2](#communication-between-starknet-layer-1-and-layer-2)
+- [StarkNet Devnet](#starknet-devnet)
+  - [Using Devnet](#using-devnet)
+  - [Starting Devnet](#starting-devnet)
+  - [Deploying a contract](#deploying-a-contract)
+  - [Querying transaction status](#querying-transaction-status)
+  - [Invoking a contract function](#invoking-a-contract-function)
+  - [Calling a contract function](#calling-a-contract-function)
+  - [Stopping Devnet](#stopping-devnet)
+- [Support](#support)
+
 This Truffle StarkNet Box provides you with the boilerplate structure necessary to start coding for StarkWare's Ethereum L2 solution, StarNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
 
 This box provides a simple Cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version 0.7.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
