@@ -7,11 +7,12 @@ const warn = chalk.hex('#FF8000'); // orange
 const error = chalk.hex('#FF0000').bold; // bold red
 
 /**
- * Logging class
+ * A class providing improved console logging.
  */
 class Logger {
     /**
      * Output information to the console.
+     * @method
      * @param {string} msg - the message to be output
      * @param {string} detail - the message detail will be appended if supplied
      */
@@ -21,6 +22,7 @@ class Logger {
 
     /**
      * Output information about work items to the console.
+     * @method
      * @param {string} msg - the message to be output
      * @param {string} detail - the message detail will be appended if supplied
      */
@@ -30,6 +32,7 @@ class Logger {
 
     /**
      * Output warnings to the console.
+     * @method
      * @param {string} msg - the message to be output
      * @param {string} detail - the message detail will be appended if supplied
      */
@@ -39,6 +42,7 @@ class Logger {
     
     /**
      * Output error information to the console.
+     * @method
      * @param {string} msg - the message to be output
      * @param {string} detail - the message detail will be appended if supplied
      */
@@ -48,6 +52,7 @@ class Logger {
 
     /**
      * Sepearates a header from the logs below.
+     * @method
      */
     logHeader() {
         console.log(info('================================================================================\n'));
@@ -55,6 +60,7 @@ class Logger {
 
     /**
      * Separates a footer from the logs above.
+     * @method
      */
     logFooter() {
         console.log(info('\n================================================================================'));
@@ -62,6 +68,7 @@ class Logger {
 
     /**
      * Separate log output.
+     * @method
      */
     seperator() {
         console.log(info('================================================================================'));

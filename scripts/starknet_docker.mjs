@@ -8,14 +8,13 @@ import {
 } from './errors.mjs';
 
 /**
- * StarkNetDoocker class
  * A class providing methods for compiling and interacting with Cairo/StarkNet contracts.
  * @extends TruffleDocker
  */
  class StarkNetDocker extends TruffleDocker {
-
     /**
-     * Create a StarkNetDocker object
+     * Create a StarkNetDocker object.
+     * @constructor
      * @param {Image} image - The Docker image to be used.
      */
     constructor(image) {
@@ -25,6 +24,7 @@ import {
 
     /**
      * Generates a StarkNet account for use in development and testing.
+     * @method
      * @param {string} accountsDir - The path to the StarkNet acccounts directory.
      * @param {string} projectDir - The path to the project root directory.
      * @param {string} network - The StarkNet network to deploy the account to.
@@ -33,19 +33,16 @@ import {
      */
     createAccount = async (accountsDir, projectDir, network, accountName) => {
         const repoTag = this._image.getRepoTag();
-
         // Docker uses an array to construct the command to be run by the container.
         const command = [
             `starknet`,
             `deploy_account`
         ];
-
         // If a name is provided for the account, push the argument on to the end of the command array.
         if (accountName) {
             command.push('--account');
             command.push(accountName);
         }
-
         const config = {
             'Hostconfig': {
                 'Binds': [`${projectDir}:/app`],
@@ -69,6 +66,7 @@ import {
 
     /**
      * Compiles a Cairo/StarkNet contract.
+     * @method
      * @param {string} contractFile - The filename of the contract to compile.
      * @param {string} projectDir - The path to the project root directory.
      * @returns {Object} The results of running the Docker container.
@@ -86,7 +84,6 @@ import {
             `--output`, `build/starknet-contracts/${compiledContractFile}`, 
             `--abi`, `build/starknet-contracts/${contractAbiFile}`
         ];
-
         const config = {
             'Hostconfig': {
                 'Binds': [`${projectDir}:/app`],
@@ -105,6 +102,7 @@ import {
 
     /**
      * Deploys a StarkNet contract.
+     * @method
      * @param {string} accountsDir - The path to the StarkNet accounts directory. 
      * @param {string} compiledContractFile - The filename of the compiled contract to deploy.
      * @param {string} projectDir - The path to the project root directory.
@@ -113,14 +111,12 @@ import {
      */
     deployContract = async (accountsDir, compiledContractFile, projectDir, network) => {
         const repoTag = this._image.getRepoTag();
-
         // Docker uses an array to construct the command to be run by the container.
         const command = [
             `starknet`,
             `deploy`,
             `--contract`, `build/starknet-contracts/${compiledContractFile}`
         ];
-
         const config = {
             'Hostconfig': {
                 'Binds': [`${projectDir}:/app`],
@@ -143,22 +139,20 @@ import {
     }
 
     /**
-     * Run the StarkNet tests
-     * @param {string} testFile - The file name of the test file to run
+     * Run the StarkNet tests.
+     * @method
+     * @param {string} testFile - The file name of the test file to run.
      * @param {string} projectDir - The path to the project root directory.
      * @returns {Object} The results of running the Docker container.
      */
     runTests = async (testFile, projectDir) => {
-        
         // Get the repo:tag string for the image to run.
         const repoTag = this._image.getRepoTag();
-
         // Docker uses an array to construct the command to be run by the container.
         const command = [
             'pytest',
             `test/starknet/${testFile}`
         ];
-
         const config = {
             'Hostconfig': {
                 'Binds': [`${projectDir}:/app`],

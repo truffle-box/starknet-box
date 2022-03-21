@@ -4,18 +4,17 @@ import Docker from 'dockerode';
 import { 
     DockerNotFoundError, 
     DockerOperationError, 
-    DockerPullImageError, 
-    DockerHubUnavailableError 
+    DockerPullError, 
+    DockerHubError 
 } from './errors.mjs';
 
 /**
- * TruffleDocker
  * A class providing common methods for interacting with a Docker image/container.
  */
  class TruffleDocker {
-
     /**
-     * Create a TruffleDocker object
+     * Create a TruffleDocker object.
+     * @constructor
      */
     constructor() {
         // If Docker is not running we can't continue.
@@ -27,7 +26,8 @@ import {
     }
 
     /**
-     * Checks for a local image and if not available pulls it from the Docker Hub
+     * Checks for a local image and if not available pulls it from the Docker Hub.
+     * @method
      * @param {Image} image - The Docker image to search Docker Hub for.
      * @returns {boolean} True if the image is found on the local machine or was pulled from Docker Hub.
      */
@@ -39,21 +39,21 @@ import {
         } catch (error) {
             throw new DockerOperationError(`An error occurred while querying docker for local images: ${error}`);
         }
-
         // It's not local, try to pull from Docker Hub
         if (!isLocal) {
             console.log(`Image not available locally. Pulling image from ${image.repository}:${image.tag}`);
             try {
                 await this.pullImage(image);
             } catch(error) {
-                throw new DockerPullImageError(`An error occurred while attempting to pull the image from Docker Hub: ${error.msg}`);
+                throw new DockerPullError(`An error occurred while attempting to pull the image from Docker Hub: ${error.msg}`);
             }
         }
         return true;
     }
 
     /**
-     * Check for the image in the local docker registry
+     * Check for the image in the local docker registry.
+     * @method
      * @param {Image} image - The Docker image to search Docker Hub for.
      * @returns {boolean} True if the image is found on the local machine.
      */
@@ -63,7 +63,6 @@ import {
         let isLocalImage = false;
         const repoTag = image.getRepoTag();
         const localImages = await this._listLocalImages();
-
         for (let image of localImages) {
             const tags = image.RepoTags;
             for (let tag of tags) {
@@ -77,6 +76,7 @@ import {
 
     /**
      * Check for the image in the Docker Hub registry. This assumes an image with a tag.
+     * @method
      * @param {Image} image - The Docker image to search Docker Hub for.
      * @returns {boolean} True if the image is available in the Docker Hub registry.
      */
@@ -84,7 +84,6 @@ import {
         // Build Docker Hub registry url for the specific image
         const dockerRegistry = `https://registry.hub.docker.com/v2/repositories/${image.repository}/tags/${image.tag}/`
         const response = await fetch(dockerRegistry);
-
         // If we get a good response, the image was found in the Docker Hub registry.
         if (response.ok) {
             return true;
@@ -93,19 +92,19 @@ import {
     }
 
     /**
-     * Pulls the specified image from the Docker Hub
-     * @param {Image} image - The image to pull from Docker Hub
-     * @returns {Promise} Resolves if the image is pulled successfully
+     * Pulls the specified image from the Docker Hub.
+     * @method
+     * @param {Image} image - The image to pull from Docker Hub.
+     * @returns {Promise} Resolves if the image is pulled successfully.
      */
     pullImage = async (image) => {
         const repoTag = image.getRepoTag();
-
         // Pull the image if it is available in the Docker Hub
         let imageAvailable;
         try {
             imageAvailable = await this.isImageAvailable(image);
         } catch (error) {
-            throw new DockerHubUnavailableError(`An error occurred while querying Docker Hub: ${error.msg}`);
+            throw new DockerHubError(`An error occurred while querying Docker Hub: ${error.msg}`);
         }
 
         let message;
@@ -115,7 +114,6 @@ import {
         return new Promise((resolve, reject) => {
             message.on("end", resolve);
             message.on("error", reject);
-
             // This is needed even if unused
             message.on("data", () => {});
         });    
@@ -123,8 +121,9 @@ import {
 
     /**
      * Run a docker container from an image.
-     * @param {string} repoTag - The docker repository and tag of the image to run
-     * @param {Object} config - THe configuration to pass to the image
+     * @method
+     * @param {string} repoTag - The docker repository and tag of the image to run.
+     * @param {Object} config - THe configuration to pass to the image.
      */
     runContainer = async (repoTag, config) => {
         const data = await this._docker.run(repoTag, [], process.stdout, config);
@@ -132,11 +131,12 @@ import {
     }
 
     /**
-     * Run a docker container from an image and execute a command
-     * @param {string} repoTag - The image for the container to run 
-     * @param {array} command - An array of commands to be run
-     * @param {Object} config - Configuration for the container
-     * @returns {Object} The result data from the container run
+     * Run a docker container from an image and execute a command.
+     * @method
+     * @param {string} repoTag - The image for the container to run .
+     * @param {array} command - An array of commands to be run.
+     * @param {Object} config - Configuration for the container.
+     * @returns {Object} The result data from the container run.
      */
     runContainerWithCommand = async (repoTag, command, config) => {
         const result = await this._docker.run(repoTag, command, process.stdout, config);
@@ -144,16 +144,19 @@ import {
     }
 
     /**
-     * Stops a running docker container
-     * @param {string} container - The id of the container to stop
+     * Stops a running docker container.
+     * @method
+     * @param {string} container - The id of the container to stop.
      */
     stopContainer = (container) => {
         this._docker.getContainer(container).stop();
     }
 
     /**
-     * Check if Docker is running
-     * @returns {boolean} True if Docker is running otherwise false
+     * Check if Docker is running.
+     * @method
+     * @private
+     * @returns {boolean} True if Docker is running otherwise false.
      */
     _isDockerRunning = () => {
         // To determine whether Docker daemon is running we ask docker.
@@ -167,7 +170,9 @@ import {
     }
 
     /**
-     * Lists images available in the local docker registry
+     * Lists images available in the local docker registry.
+     * @method
+     * @private
      * @returns {ImageInfo[]} An array of information about images
      */
      _listLocalImages = async () => {
@@ -177,10 +182,9 @@ import {
 }
 
 /**
- * Image class
+ * A class representing a docker image.
  */
  class Image {
-    
     /**
      * Represents a Docker image found on the Docker Hub.
      * @constructor
@@ -194,6 +198,7 @@ import {
 
     /**
      * Build and return a repository:tag string for the image.
+     * @method
      * @returns {string} The repoository:tag string. 
      */
     getRepoTag() {

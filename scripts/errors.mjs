@@ -1,107 +1,143 @@
 /**
- * DockerNotRunningError
- * This error is thrown if Docker is not found running locally.
+ * Docker is not found running locally.
+ * @extends Error
  */
  class DockerNotFoundError extends Error {
-    constructor(msg) {
-        super(msg);
+     /**
+      * @constructor
+      * @param {string} message - Error message.
+      */
+    constructor(message) {
+        super(message);
         this.name = "DockerNotRunningError";
     }
 }
 
 /**
- * DockerOperationError
- * Thrown if an operation with Docker fails.
+ * An operation with Docker fails.
+ * @extends Error
  */
 class DockerOperationError extends Error {
-    constructor(msg) {
-        super(msg);
+    /**
+     * @constructor
+     * @param {string} message - Error message.
+     */
+    constructor(message) {
+        super(message);
         this.name = "DockerOperationError";
     }
 }
 
 /**
- * DockerPullError
- * Thrown if there is a failure in pulling an image from Docker Hub.
+ * There is a failure in pulling an image from Docker Hub.
+ * @extends Error
  */
-class DockerPullImageError extends Error {
-    constructor(msg) {
-        super(msg);
+class DockerPullError extends Error {
+    /**
+     * @constructor
+     * @param {string} message - Error message.
+     */
+    constructor(message) {
+        super(message);
         this.name = "DockerPullImageError"
     }
 }
 
 /**
- * DockerHubUnavailableError
- * Thrown if the Docker Hub cannot be reached.
+ * The Docker Hub cannot be reached.
+ * @extends Error
  */
-class DockerHubUnavailableError extends Error {
-    constructor(msg) {
-        super(msg);
-        this.name = "DockerHubUnavailableError";
+class DockerHubError extends Error {
+    /**
+     * @constructor
+     * @param {string} message - Error message. 
+     */
+    constructor(message) {
+        super(message);
+        this.name = "DockerHubError";
     }
 }
 
 /**
- * StarkNetAccountCreationError
- * Thrown if there is an error deploying a StarkNet account.
+ * There is an error deploying a StarkNet account.
+ * @extends Error
  */
 class StarkNetAccountCreationError extends Error {
-    constructor(msg) {
-        super(msg);
+    /**
+     * @constructor
+     * @param {string} message - Error message. 
+     */
+     constructor(message) {
+        super(message);
         this.name = "StarkNetAccountCreationError";
     }
 }
 
 /**
- * StarkNetCompilationError
- * Thrown if there is an error compiling a StarkNet contract.
+ * There is an error compiling a StarkNet contract.
+ * @extends Error
  */
 class StarkNetCompilationError extends Error {
-    constructor(msg) {
-        super(msg);
+    /**
+     * @constructor
+     * @param {string} message - Error message. 
+     */
+     constructor(message) {
+        super(message);
         this.name = "StarkNetCompilationError";
     }
 }
 
 /**
- * StarkNetDeploymentError
- * Thrown if there is an error while deploying a StarkNet contract.
+ * There is an error while deploying a StarkNet contract.
+ * @extends Error
  */
 class StarkNetDeploymentError extends Error {
-    constructor(msg) {
-        super(msg);
+    /**
+     * @constructor
+     * @param {string} message - Error message. 
+     */
+     constructor(message) {
+        super(message);
         this.name = "StarkNetDeploymentError";
     }
 }
 
 /**
- * StarkNetTestingError
- * Thrown if there is an error while running tests on StarkNet contracts.
+ * There is an error while running tests on StarkNet contracts.
+ * @extends Error
  */
 class StarkNetTestingError extends Error {
-    constructor(msg) {
-        super(msg);
+    /**
+     * @constructor
+     * @param {string} message - Error message. 
+     */
+     constructor(message) {
+        super(message);
         this.name = "StarkNetTestingError";
     }
 }
 
 /**
- * StarkNetDevnetError
- * Thrown if there is an error while running the StarkNet Devnet
+ * There is an error while running the StarkNet Devnet
+ * @extends Error
  */
 class StarkNetDevnetError extends Error {
-    constructor(msg) {
-        super(msg);
+    /**
+     * @constructor
+     * @param {string} message - Error message. 
+     */
+     constructor(message) {
+        super(message);
         this.name = "StarkNetDevnetError";
     }
 }
 
 export { 
-    DockerHubUnavailableError, 
+    DockerHubError, 
     DockerNotFoundError, 
     DockerOperationError, 
-    DockerPullImageError, 
+    DockerPullError, 
     StarkNetAccountCreationError, 
     StarkNetCompilationError, 
     StarkNetDeploymentError, 
