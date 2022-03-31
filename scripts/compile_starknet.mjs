@@ -16,6 +16,7 @@ const starkNetDocker = new StarkNetDocker(image);
 // Project configuration
 const projectDir = process.cwd();
 const buildDir = starknetConfig.contracts_build_directory;
+const abiDir = buildDir + "/abis";
 const contractsDir = starknetConfig.contracts_directory;
 
 // Attempt to load the specified docker image
@@ -28,11 +29,11 @@ try {
 
 if (imageLoaded) {
     // Clean up or create build directory for compilation artifacts
-    if (!fse.existsSync(buildDir)) {
-        fse.mkdirSync(buildDir, {recursive: true});
+    if (!fse.existsSync(abiDir)) {
+        fse.mkdirSync(abiDir, {recursive: true});
     } else {
-        fse.rmdirSync(buildDir, {recursive: true, force: true});
-        fse.mkdirSync(buildDir, {recursive: true});
+        fse.rmdirSync(abiDir, {recursive: true, force: true});
+        fse.mkdirSync(abiDir, {recursive: true});
     }
     
     logger.logInfo(`Compiling all Cairo contracts in the ${contractsDir} directory.`);
@@ -44,7 +45,7 @@ if (imageLoaded) {
             logger.logWork(`Compiling ${file}`);
             let result;
             try {
-                result = await starkNetDocker.compileContract(file, projectDir);
+                result = await starkNetDocker.compileContract(file, projectDir, contractsDir, buildDir);
             } catch (error) {
                 logger.logError(`An error occurred while trying to compile a contract: ${error.message}`);
             }

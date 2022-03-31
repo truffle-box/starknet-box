@@ -58,7 +58,7 @@ try {
 
 if (imageLoaded){
     // Get list of compiled contract files from the starknet contracts build directory
-    // It is expected that the compiled contract filenames will have the form contract-name_compiled.json
+    // It is expected that the compiled contract filenames will have the form <contract_name>.json
     let directoryList = fse.readdirSync(buildDir);
     
     logger.logInfo(`Deploying all Cairo contracts in the ${buildDir} directory.`);
@@ -66,7 +66,7 @@ if (imageLoaded){
     
     for (let file of directoryList) {
         // let result;
-        if (file.endsWith("_compiled.json")) {
+        if (file.endsWith(".json")) {
             logger.logWork('Deploying: ', file);
             let result;
             try {

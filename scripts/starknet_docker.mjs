@@ -70,21 +70,21 @@ import {
      * @method
      * @param {string} contractFile - The filename of the contract to compile.
      * @param {string} projectDir - The path to the project root directory.
+     * @param {string} contractsDir - The contract source code directory.
+     * @param {string} buildDir - The contract compilation artifacts directory.
      * @returns {Object} The results of running the Docker container.
      * @throws {StarkNetCompileError} An error occurred while compiling a contract.
      */
-    compileContract = async (contractFile, projectDir) => {
-        const outputFilename = contractFile.substring(0, contractFile.indexOf(".cairo"));
-        const compiledContractFile =  `${outputFilename}_compiled.json`;
-        const contractAbiFile = `${outputFilename}_abi.json`;
+    compileContract = async (contractFile, projectDir, contractsDir, buildDir) => {
+        const outputFilename = contractFile.substring(0, contractFile.indexOf(".cairo")) + ".json";
         const repoTag = this._image.getRepoTag();
 
         // Docker uses an array to construct the command to be run by the container.
         const command = [
             `starknet-compile`, 
-            `contracts/starknet/${contractFile}`, 
-            `--output`, `build/starknet-contracts/${compiledContractFile}`, 
-            `--abi`, `build/starknet-contracts/${contractAbiFile}`
+            `${contractsDir}/${contractFile}`,
+            `--output`, `${buildDir}/${outputFilename}`,
+            `--abi`, `${buildDir}/abis/${outputFilename}`
         ];
         const config = {
             'Hostconfig': {
