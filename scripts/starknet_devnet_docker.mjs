@@ -20,12 +20,23 @@ import { StarkNetDevnetError } from './errors.mjs';
      * Spins up the StarkNet Devnet container ready for use.
      * @method
      * @returns {Object} The results of running the Docker container.
-     * @throws {StarkNetDevnetError} An error occured while starting Devnet.
+     * @throws {StarkNetDevnetError} An error occurred while starting Devnet.
      */
     runDevnet = async () => {
         // Get the repo:tag string for the image to run.
         const repoTag = this._image.getRepoTag();
-        // docker run -it -p 127.0.0.1:5000:5000 shardlabs/starknet-devnet
+
+        // if the starknet-devnet docker network does not exist, create it.
+        const opts = {
+            "filters": {
+                "name": ["starknet-devnet"]
+            }
+        };
+        const networks = await this._docker.listNetworks(opts);
+        if (networks.length === 0) {
+            await this.createNetwork({"Name": "starknet-devnet"});
+        }
+
         const config = {
             "name": "starknet-devnet",
             "AttachStdin": true,
@@ -46,7 +57,7 @@ import { StarkNetDevnetError } from './errors.mjs';
                         }
                     ]
                 },
-                "NetworkMode": "default",
+                "NetworkMode": "starknet-devnet",
                 "Autoremove": true
             }
         };
@@ -55,7 +66,7 @@ import { StarkNetDevnetError } from './errors.mjs';
         try {
             result = await this.runContainer(repoTag, config);            
         } catch (error) {
-            throw new StarkNetDevnetError(`An error occured while starting Devnet: ${error}`);
+            throw new StarkNetDevnetError(`An error occurred while starting Devnet: ${error.message}`);
         }
         return result;
     };

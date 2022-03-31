@@ -1,6 +1,7 @@
 # Environment files
 .env
 .env.test
+.idea
 
 # Build artifacts and node pacakges
 build
