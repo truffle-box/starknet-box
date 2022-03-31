@@ -1,11 +1,11 @@
 import { execSync } from 'child_process';
 import fetch from 'node-fetch';
 import Docker from 'dockerode';
-import { 
-    DockerNotFoundError, 
-    DockerOperationError, 
-    DockerPullError, 
-    DockerHubError 
+import {
+    DockerNotFoundError,
+    DockerOperationError,
+    DockerPullError,
+    DockerHubError
 } from './errors.mjs';
 
 /**
@@ -21,7 +21,7 @@ import {
         if (!this._isDockerRunning()) {
             throw new DockerNotFoundError("Could not find docker! Check that docker is running.");
         }
-        // If Docker is running we cam instantiate a new Docker object.
+        // If Docker is running we can instantiate a new Docker object.
         this._docker = new Docker();
     }
 
@@ -47,7 +47,7 @@ import {
             try {
                 await this.pullImage(image);
             } catch(error) {
-                throw new DockerPullError(`An error occurred while attempting to pull the image from Docker Hub: ${error.msg}`);
+                throw new DockerPullError(`An error occurred while attempting to pull the image from Docker Hub: ${error.message}`);
             }
         }
         return true;
@@ -64,11 +64,11 @@ import {
         // in the local repo to check if the one we're interested in exists
         let isLocalImage = false;
         const repoTag = image.getRepoTag();
-        const localImages = await this._listLocalImages();
+        const localImages = await this._docker.listImages();
         for (let image of localImages) {
             const tags = image.RepoTags;
             for (let tag of tags) {
-                if (tag == repoTag) {
+                if (tag === repoTag) {
                     isLocalImage = true;
                 }
             }
@@ -83,14 +83,11 @@ import {
      * @returns {boolean} True if the image is available in the Docker Hub registry.
      */
     isImageAvailable = async (image) => {
-        // Build Docker Hub registry url for the specific image
-        const dockerRegistry = `https://registry.hub.docker.com/v2/repositories/${image.repository}/tags/${image.tag}/`
-        const response = await fetch(dockerRegistry);
+        const response = await fetch(
+          `https://registry.hub.docker.com/v2/repositories/${image.repository}/tags/${image.tag}/`
+        );
         // If we get a good response, the image was found in the Docker Hub registry.
-        if (response.ok) {
-            return true;
-        }
-        return false;
+        return !!response.ok;
     }
 
     /**
@@ -107,7 +104,7 @@ import {
         try {
             imageAvailable = await this.isImageAvailable(image);
         } catch (error) {
-            throw new DockerHubError(`An error occurred while querying Docker Hub: ${error.msg}`);
+            throw new DockerHubError(`An error occurred while querying Docker Hub: ${error.message}`);
         }
 
         let message;
@@ -126,11 +123,10 @@ import {
      * Run a docker container from an image.
      * @method
      * @param {string} repoTag - The docker repository and tag of the image to run.
-     * @param {Object} config - THe configuration to pass to the image.
+     * @param {object} config - The configuration to pass to the image.
      */
     runContainer = async (repoTag, config) => {
-        const data = await this._docker.run(repoTag, [], process.stdout, config);
-        return data;
+        return await this._docker.run(repoTag, [], process.stdout, config);
     }
 
     /**
@@ -138,12 +134,21 @@ import {
      * @method
      * @param {string} repoTag - The image for the container to run .
      * @param {array} command - An array of commands to be run.
-     * @param {Object} config - Configuration for the container.
-     * @returns {Object} The result data from the container run.
+     * @param {object} config - Configuration for the container.
+     * @returns {object} The result data from the container run.
      */
     runContainerWithCommand = async (repoTag, command, config) => {
-        const result = await this._docker.run(repoTag, command, process.stdout, config);
-        return result;
+        return await this._docker.run(repoTag, command, process.stdout, config);
+    }
+
+    /**
+     * Create a docker custom network
+     * @method
+     * @param {object} options 
+     * @returns {object} The result data from the container run.
+     */
+    createNetwork = async (options) => {
+        return await this._docker.createNetwork(options);
     }
 
     /**
@@ -176,17 +181,6 @@ import {
         }
         return true;
     }
-
-    /**
-     * Lists images available in the local docker registry.
-     * @method
-     * @private
-     * @returns {ImageInfo[]} An array of information about images
-     */
-     _listLocalImages = async () => {
-        const images = await this._docker.listImages();
-        return images;
-    }
 }
 
 /**
@@ -207,7 +201,7 @@ import {
     /**
      * Build and return a repository:tag string for the image.
      * @method
-     * @returns {string} The repoository:tag string. 
+     * @returns {string} The repository:tag string.
      */
     getRepoTag() {
         return `${this.repository}:${this.tag}`;

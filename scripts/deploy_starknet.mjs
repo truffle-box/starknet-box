@@ -58,19 +58,25 @@ try {
 
 if (imageLoaded){
     // Get list of compiled contract files from the starknet contracts build directory
-    // It is exptected that the compiled contract filenames will have the form contract-name_compiled.json
+    // It is expected that the compiled contract filenames will have the form contract-name_compiled.json
     let directoryList = fse.readdirSync(buildDir);
     
     logger.logInfo(`Deploying all Cairo contracts in the ${buildDir} directory.`);
     logger.logHeader();
     
     for (let file of directoryList) {
-        let result;
+        // let result;
         if (file.endsWith("_compiled.json")) {
             logger.logWork('Deploying: ', file);
             let result;
             try {
-                result = await starkNetDocker.deployContract(accounts_dir, file, projectDir, network);
+                if (network === 'devnet') {
+                    const gatewayUrl = networks.devnet.gateway_url;
+                    const feederGatewayUrl = networks.devnet.feeder_gateway_url;
+                    result = await starkNetDocker.deployContract(accounts_dir, file, projectDir, network, gatewayUrl, feederGatewayUrl, false);
+                } else {
+                    result = await starkNetDocker.deployContract(accounts_dir, file, projectDir, network);
+                }
             } catch (error) {
                 logger.logError(`An error occurred while attempting to deploy a contract: ${error.message}`);
             }

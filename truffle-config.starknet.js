@@ -15,7 +15,7 @@ module.exports = {
   /**
    * starknet_accounts_directory tells Cairo where the StarkNet account keys are located.
    * WARNING: accounts deployed using keys stored in this directory are for development and testing only.
-   * DO NOT use any account deployed using keys stored here in production or you risk having all your funds stolen. 
+   * DO NOT use any account deployed using keys stored here in production, or you risk having all your funds stolen.
    * You should also add this directory to a .gitignore file to avoid making your keys publicly available.
    */
   starknet_accounts_directory: './starknet_accounts',
@@ -28,8 +28,9 @@ module.exports = {
     //   network_id: "alpha-mainnet"
     // },
     devnet: {
-      gateway_url: "http://127.0.0.1:5000/gateway/",
-      feeder_gateway_url: "http://127.0.0.1:5000/feeder_gateway/"
+      network_id: "devnet",
+      gateway_url: "http://starknet-devnet:5000/gateway/",
+      feeder_gateway_url: "http://starknet-devnet:5000/feeder_gateway/"
     },
     default: {
       network: "testnet",
@@ -45,6 +46,6 @@ module.exports = {
   // Configuration for StarkNet DevNet
   devnet: {
     repository: "shardlabs/starknet-devnet",
-    version: "0.1.18",
+    version: "0.1.19",
   },
 };
