@@ -62,6 +62,11 @@ StarkNet, by default, defines two networks `alpha-goerli` and `alpha-mainnet`. I
     mainnet: {
       network_id: "alpha-mainnet"
     },
+    devnet: {
+      network_id: "devnet",
+      gateway_url: "http://starknet-devnet:5000/gateway/",
+      feeder_gateway_url: "http://starknet-devnet:5000/feeder_gateway/"
+    },
     default: {
       network: "testnet",
     },
