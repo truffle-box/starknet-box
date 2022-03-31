@@ -107,11 +107,12 @@ import {
      * @method
      * @param {string} accountsDir - The path to the StarkNet accounts directory. 
      * @param {string} compiledContractFile - The filename of the compiled contract to deploy.
-     * @param {string} projectDir - The path to the project root directory.
-     * @param {string} network - The StarkNet network to deploy the contract to.
-     * @param {string} gatewayUrl - The gateway url if using a non-standard network, such as Devnet.
-     * @param {string} feederGatewayUrl - The feeder gateway url if using a non-standard network, such as Devnet.
-     * @param {boolean} wallet - Use an account for the deployment. Currently, deploying to Devnet must not use an account. Default to true.
+     * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
+     * @param {string} buildDir - The contract compilation artifacts directory.
+     * @param {string} network - The StarkNet network to deploy the contract to. (optional)
+     * @param {string} gatewayUrl - The gateway url if using a non-standard network, such as Devnet. (optional)
+     * @param {string} feederGatewayUrl - The feeder gateway url if using a non-standard network, such as Devnet. (optional)
+     * @param {boolean} wallet - Use an account for the deployment. Currently, deploying to Devnet must not use an account. Default to true. (optional)
      * @returns {Object} The results of running the Docker container.
      * @throws {StarkNetDeploymentError} An error occurred while deploying a contract.
      */
@@ -119,6 +120,7 @@ import {
       accountsDir,
       compiledContractFile,
       projectDir,
+      buildDir,
       network,
       gatewayUrl = '',
       feederGatewayUrl = '',
@@ -128,7 +130,7 @@ import {
         const command = [
             `starknet`,
             `deploy`,
-            `--contract`, `build/starknet-contracts/${compiledContractFile}`
+            `--contract`, `${buildDir}/${compiledContractFile}`
         ];
         if (gatewayUrl !== '' && feederGatewayUrl !== '') {
             command.push(`--gateway_url`, `${gatewayUrl}`);
