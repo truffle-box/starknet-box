@@ -95,11 +95,11 @@ npm run starknet:compile
 ### Deploying
 To deploy your compiled StarkNet contracts, run the following in your terminal:
 ```bash
-npm run starknet:deploy
+npm run starknet:deploy <contract_name>
 ```
 or, you may specify a network target with the `--network` argument:
 ```bash
-npm run starknet:deploy --network=testnet
+npm run starknet:deploy <contract_name> --network=testnet
 ```
 ## Basic Commands
 The code here will allow you to compile, deploy, and test your code against a simulation of a StarkNet network. The following commands can be run:
@@ -114,7 +114,7 @@ npm run starknet:compile
 ```
 To deploy:
 ```bash
-npm run starknet:deploy
+npm run starknet:deploy <contract_name>
 ```
 To test:
 ```bash
@@ -155,10 +155,7 @@ When using Devnet rather that Alpha testnet, you must use the StarkNet cli gatew
 Once your Devnet is up and running as above, you can begin to interact with it by deploying your contracts and invoking and calling your contract functions. The following examples use the StarkNet cli to interact with Devnet. 
 ### Deploying a contract
 ```bash
-starknet deploy -no_wallet \
---gateway_url http://127.0.0.1:5000/gateway/ \
---feeder_gateway_url http://127.0.0.1:5000/feeder_gateway/ \
---contract ./build/contract_compiled.json
+npm run starknet:deploy <contract_name> --network=devnet
 ```
 Output simlar to the following should then be displayed in the console:
 ```bash
@@ -168,7 +165,7 @@ Transaction hash: 0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f
 ```
 In the Devnet console, output similar to the following should be displayed:
 ```bash
-172.17.0.1 - - [22/Feb/2022 04:01:35] "POST /gateway/add_transaction HTTP/1.1" 200 -
+192.168.176.3 - - [31/Mar/2022 05:55:16] "POST /gateway/add_transaction HTTP/1.1" 200 -
 ```
 ### Querying transaction status
 ```bash
@@ -179,7 +176,7 @@ starknet tx_status --no_wallet \
 ```
 Again, the Devnet console will display output similar to the following:
 ```bash
-172.17.0.1 - - [22/Feb/2022 04:02:46] "GET /feeder_gateway/get_transaction_status?transactionHash=0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f5d0e HTTP/1.1" 200 -
+192.168.176.3 - - [22/Feb/2022 04:02:46] "GET /feeder_gateway/get_transaction_status?transactionHash=0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f5d0e HTTP/1.1" 200 -
 ```
 ### Invoking a contract function
 ```bash
@@ -193,7 +190,7 @@ starknet invoke --no_wallet \
 ```
 This will produce output similar to the following in the Devnet console:
 ```bash 
-172.17.0.1 - - [22/Feb/2022 04:04:22] "POST /gateway/add_transaction HTTP/1.1" 200 -
+192.168.176.3 - - [22/Feb/2022 04:04:22] "POST /gateway/add_transaction HTTP/1.1" 200 -
 ```
 ### Calling a contract function
 ```bash
@@ -206,7 +203,7 @@ starknet call --no_wallet \
 ```
 This will produce output similar to the following in the Devnet console:
 ```bash
-172.17.0.1 - - [22/Feb/2022 04:06:09] "POST /feeder_gateway/call_contract?blockNumber=null HTTP/1.1" 200 -
+192.168.176.3 - - [22/Feb/2022 04:06:09] "POST /feeder_gateway/call_contract?blockNumber=null HTTP/1.1" 200 -
 ```
 ### Stopping Devnet
 The running Devnet container can be stopped with docker. First type CTRL+C to exit Devnet's console. This should take you back to your terminal in your project's root directory. The Devnet container is still running though. To stop the container, use the following docker command:
