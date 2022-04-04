@@ -9,6 +9,8 @@
   - [Accounts](#accounts)
   - [Compiling](#compiling)
   - [Deploying](#deploying)
+  - [Invoking](#invoking)
+  - [Calling](#calling)
 - [Basic Commands](#basic-commands)
   - [Testing](#testing)
   - [Communication between StarkNet Layer 1 and Layer 2](#communication-between-starknet-layer-1-and-layer-2)
@@ -106,6 +108,18 @@ or, you may specify a network target with the `--network` argument:
 ```bash
 npm run starknet:deploy <contract_name> --network=testnet
 ```
+### Invoking
+To invoke a function on a deployed contract, run the following in your terminal:
+```bash
+npm run starknet:invoke --contract=<contract_name> --address=<contract_address> --function=<function_name> <function_arguments>
+```
+where <function_arguments> is a space-delimited list of values required by the function to be invoked.
+### Calling
+To call a function on a deployed contract, run the following in your terminal:
+```bash
+npm run starknet:call --contract=<contract_name> --address=<contract_address> --function=<function_name> <function_argumnents>
+```
+where <function_arguments> is a space-delimited list of values required by the function to be called.
 ## Basic Commands
 The code here will allow you to compile, deploy, and test your code against a simulation of a StarkNet network. The following commands can be run:
 
@@ -124,6 +138,14 @@ npm run starknet:deploy <contract_name>
 To test:
 ```bash
 npm run starknet:test
+```
+To invoke a function:
+```bash
+npm run starknet:invoke --contract=<contract_name> --address=<contract_address> --function=<function_name> <function_arguments>
+```
+To call a function:
+```bash
+npm run starknet:call --contract=<contract_name> --address=<contract_address> --function=<function_name> <function_argumnents>
 ```
 ### Testing
 Currently, this box supports testing via the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework. The test script makes use of StarkNet's unit testing framework to instantiate a local simulation of a StarkNet network against which unit tests can be run. In order to run the test provided in the boilerplate, use the following command:
