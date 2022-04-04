@@ -45,7 +45,7 @@ module.exports = {
   },
   // Configuration for StarkNet DevNet
   devnet: {
-    repository: "shardlabs/starknet-devnet",
-    version: "0.1.19",
+    repository: "shardlabs/starknet-devnet",  // Docker Hub repository
+    version: "0.1.19",                        // Version tag
   },
 };

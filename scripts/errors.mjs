@@ -104,6 +104,21 @@ class StarkNetDeploymentError extends Error {
 }
 
 /**
+ * There is an error while deploying a StarkNet contract.
+ * @extends Error
+ */
+class StarkNetFunctionError extends Error {
+  /**
+   * @constructor
+   * @param {string} message - Error message.
+   */
+  constructor(message) {
+    super(message);
+    this.name = "StarkNetFunctionError";
+  }
+}
+
+/**
  * There is an error while running tests on StarkNet contracts.
  * @extends Error
  */
@@ -133,14 +148,15 @@ class StarkNetDevnetError extends Error {
     }
 }
 
-export { 
-    DockerHubError, 
-    DockerNotFoundError, 
-    DockerOperationError, 
-    DockerPullError, 
-    StarkNetAccountCreationError, 
-    StarkNetCompileError, 
-    StarkNetDeploymentError, 
-    StarkNetDevnetError, 
-    StarkNetTestingError 
+export {
+  DockerHubError,
+  DockerNotFoundError,
+  DockerOperationError,
+  DockerPullError,
+  StarkNetAccountCreationError,
+  StarkNetCompileError,
+  StarkNetDeploymentError,
+  StarkNetDevnetError,
+  StarkNetFunctionError,
+  StarkNetTestingError
 };
