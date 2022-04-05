@@ -108,6 +108,7 @@ import {
      * @method
      * @param {string} accountsDir - The path to the StarkNet accounts directory. 
      * @param {string} compiledContractFile - The filename of the compiled contract to deploy.
+     * @param {array} constructorInputs - Inputs to the contract constructor function.
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
      * @param {string} buildDir - The contract compilation artifacts directory.
      * @param {string} network - The StarkNet network to deploy the contract to. (optional)
@@ -120,6 +121,7 @@ import {
     deployContract = async (
       accountsDir,
       compiledContractFile,
+      constructorInputs,
       projectDir,
       buildDir,
       network,
@@ -140,6 +142,15 @@ import {
         if (wallet === false) {
             command.push('--no_wallet');
         }
+        // Set up constructor arguments if supplied
+        if (constructorInputs.length >= 1) {
+            // Function arguments were passed in
+            command.push(`--inputs`);
+            for (let input of constructorInputs) {
+                command.push(input.toString());
+            }
+        }
+
         // Set up host and environment configuration for the container
         const config = {
             'Hostconfig': {
@@ -176,7 +187,7 @@ import {
      * @param {string} starknetCommand - The StarkNet command (call or invoke).
      * @param {string} abiFile - The JSON file containing the contract's ABI.
      * @param {string} contractFunction - The name of the function to invoke/call.
-     * @param {string} functionInputs - Inputs to the invoked/called function.
+     * @param {array} functionInputs - Inputs to the invoked/called function.
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
      * @param {string} buildDir - The contract compilation artifacts directory.
      * @param {string} network - The StarkNet network to deploy the contract to. (optional)
