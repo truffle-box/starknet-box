@@ -2,6 +2,7 @@
 - [Requirement](#requirements)
 - [Installation](#installation)
 - [Setup](#setup)
+  - [Docker](#docker)
   - [Configuration](#configuration)
   - [Directory Structure for Artifacts](#directory-structure-for-artifacts)
 - [StarkNet](#starknet)
@@ -46,6 +47,8 @@ Note that this installation command will only work once the box is published (in
 truffle unbox starknet
 ```
 ## Setup
+### Docker
+This Truffle box uses two Docker images to compile, deploy, interact with, and test StarkNet contracts. Accordingly, Docker must be installed on the host machine to make use of this box. The Docker images do not need to exist on the host machine prior to use - they will be pulled from the Docker Hub if they are not already available locally. Docker Desktop can be downloaded from the Docker website. We suggest that you read at the [Docker installation guide](https://docs.docker.com/get-docker/) to suit your operating system.
 ### Configuration
 Included with this Box is a StarkNet configuration file: `truffle-config.starknet.js`. This file contains a reference to the new file location of the contracts_build_directory and contracts_directory for StarkNet contracts, and the starknet_accounts_directory where the box will store keys for StarkNet accounts used during development. It also configures the StarkNet network on Goerli Testnet as the network to which compiled contracts will be deployed. The StarkNet Devnet, development network, is also configured here. This box is configured to use [Shard Labs' StarkNet devnet docker container](https://github.com/Shard-Labs/starknet-devnet).
 
