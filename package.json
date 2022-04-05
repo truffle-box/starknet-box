@@ -9,11 +9,13 @@
   "scripts": {
     "test": "",
     "docs": "node_modules/jsdoc/jsdoc.js -c ./.jsdoc.conf.json",
-    "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
     "starknet:compile": "node ./scripts/compile_starknet.mjs",
     "starknet:deploy": "node ./scripts/deploy_starknet.mjs --network=$npm_config_network",
-    "starknet:test": "node ./scripts/test_starknet.mjs",
-    "starknet:start_devnet": "node ./scripts/start_devnet.mjs"
+    "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
+    "starknet:invoke": "node scripts/call_invoke_transaction.mjs --command='invoke' --contract=$npm_config_contract --address=$npm_config_address --function=$npm_config_function --network=$npm_config_network",
+    "starknet:call": "node ./scripts/call_invoke_transaction.mjs --command='call' --contract=$npm_config_contract --address=$npm_config_address --function=$npm_config_function --network=$npm_config_network",
+    "starknet:start_devnet": "node ./scripts/start_devnet.mjs",
+    "starknet:test": "node ./scripts/test_starknet.mjs"
   },
   "repository": {
     "type": "git",
