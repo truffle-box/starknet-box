@@ -94,6 +94,10 @@ or, you may specify a network target with the `--network` argument:
 ```bash
 npm run starknet:deploy_account --network=testnet
 ```
+### Fees
+Both StarkNet alpha-goerli and alpha-mainnet now have an operating fee mechanism. However, fees are not being charged at the time of writing. This will change in the very near future. To avoid problems interacting with StarkNet you should ensure that any account you use to interact with StarkNet is funded.
+
+You can fund a test account using the [StarkNet alpha-goerli faucet](https://faucet.goerli.starknet.io/).
 ### Compiling
 To compile your StarkNet contracts using the Cairo compiler, run the following in your terminal:
 ```bash
@@ -102,11 +106,13 @@ npm run starknet:compile
 ### Deploying
 To deploy your compiled StarkNet contracts, run the following in your terminal:
 ```bash
-npm run starknet:deploy <contract_name>
+npm run starknet:deploy --contract<contract_name> <constructor_arguments>
 ```
+where <constructor_arguments> is a space-delimited list of arguments to be passed into the contract's constructor. If the contract's constructor requires no arguments, then no arguments need to be provided.
+
 or, you may specify a network target with the `--network` argument:
 ```bash
-npm run starknet:deploy <contract_name> --network=testnet
+npm run starknet:deploy --contract=<contract_name> --network=testnet <constructor_argumnets>
 ```
 ### Invoking
 To invoke a function on a deployed contract, run the following in your terminal:
@@ -131,9 +137,9 @@ To compile:
 ```bash
 npm run starknet:compile
 ```
-To deploy:
+To deploy a contract:
 ```bash
-npm run starknet:deploy <contract_name>
+npm run starknet:deploy --contract=<contract_name> <constructor_arguments>
 ```
 To test:
 ```bash
@@ -182,9 +188,11 @@ When using Devnet rather that Alpha testnet, you must use the StarkNet cli gatew
 Once your Devnet is up and running as above, you can begin to interact with it by deploying your contracts and invoking and calling your contract functions. The following examples use the StarkNet cli to interact with Devnet. 
 ### Deploying a contract
 ```bash
-npm run starknet:deploy <contract_name> --network=devnet
+npm run starknet:deploy --network=devnet --contract=<contract_name> <constructor_arguments>
 ```
-Output simlar to the following should then be displayed in the console:
+where <constructor_arguments> is a space-delimited list of arguments to be passed into the contract's constructor. If the contract's constructor requires no arguments, then no arguments need to be provided.
+
+Output similar to the following should then be displayed in the console:
 ```bash
 Deploy transaction was sent.
 Contract address: 0x040ac735fce2af86b335ac0db11ddf1d9d956cc577f02cf0ea6ed8c06119cdce
@@ -207,13 +215,7 @@ Again, the Devnet console will display output similar to the following:
 ```
 ### Invoking a contract function
 ```bash
-starknet invoke --no_wallet \
---gateway_url http://127.0.0.1:5000/gateway/ \
---feeder_gateway_url http://127.0.0.1:5000/feeder_gateway/ \
---address 0x040ac735fce2af86b335ac0db11ddf1d9d956cc577f02cf0ea6ed8c06119cdce \
---abi ./build/contract_abi.json \
---function increase_balance \
---inputs 1234
+npm run starknet:invoke --network=devnet --contract=contract --address=0x040ac735fce2af86b335ac0db11ddf1d9d956cc577f02cf0ea6ed8c06119cdce --function=increase_balance 1234
 ```
 This will produce output similar to the following in the Devnet console:
 ```bash 
@@ -221,12 +223,7 @@ This will produce output similar to the following in the Devnet console:
 ```
 ### Calling a contract function
 ```bash
-starknet call --no_wallet \
---gateway_url http://127.0.0.1:5000/gateway/ \
---feeder_gateway_url http://127.0.0.1:5000/feeder_gateway/ \
---abi ./build/contract_abi.json \
---address 0x040ac735fce2af86b335ac0db11ddf1d9d956cc577f02cf0ea6ed8c06119cdce \
---function get_balance
+npm run starknet:call --network=devnet --contract=contract --address=0x040ac735fce2af86b335ac0db11ddf1d9d956cc577f02cf0ea6ed8c06119cdce --function=get_balance
 ```
 This will produce output similar to the following in the Devnet console:
 ```bash
