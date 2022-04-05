@@ -7,6 +7,7 @@
 - [StarkNet](#starknet)
   - [Networks](#networks)
   - [Accounts](#accounts)
+  - [Fees](#fees)
   - [Compiling](#compiling)
   - [Deploying](#deploying)
   - [Invoking](#invoking)
