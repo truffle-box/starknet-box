@@ -52,8 +52,8 @@ if (imageLoaded){
         logger.logError(`An error occurred while attempting to deploy the account contract: ${error.message}`);
     }
     if (result[0].StatusCode !== 0) {
-        logger.logError('\nThere was an error deploying the account.\n');
+        logger.logError('There was an error deploying the account.\n');
     }
 } else {
-    logger.logError('\nUnable to continue. The docker image could not be located. Requested image: ', image.getRepoTag() + '\n');
+    logger.logError('Unable to continue. The docker image could not be located. Requested image: ', image.getRepoTag() + '\n');
 }

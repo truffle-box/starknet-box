@@ -46,7 +46,7 @@ try {
 }
 
 if (imageLoaded){
-  logger.logInfo(`Invoking contract function ${contractFunction}.`);
+  logger.logInfo(`Invoking contract function: `, `${contractFunction}`);
   logger.logHeader();
 
   const abiFile = `${contractName}.json`
