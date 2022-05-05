@@ -29,7 +29,7 @@ import {
      * @param {string} accountsDir - The path to the StarkNet accounts directory.
      * @param {string} projectDir - The path to the project root directory.
      * @param {string} network - The StarkNet network to deploy the account to.
-     * @param {string} accountName - The name of the account to be created (optional).
+     * @param {string} [accountName] - The name of the account to be created (optional).
      * @returns {Promise<object>} The results of running the Docker container.
      * @throws {StarkNetAccountCreationError} An error occurred while deploying the account.
      */

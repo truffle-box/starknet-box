@@ -3,6 +3,7 @@ import yargs from 'yargs';
 import { Image } from './truffle_docker.mjs';
 import { StarkNetDocker } from './starknet_docker.mjs';
 import starknetConfig from '../truffle-config.starknet.js';
+import { setNetwork, networks } from './networks.mjs';
 
 // Pretty log output
 import { Logger } from './logging.mjs';
@@ -19,35 +20,14 @@ const projectDir = process.cwd();
 const buildDir = starknetConfig.contracts_build_directory;
 const accounts_dir = starknetConfig.starknet_accounts_directory;
 
-// StarkNet network configuration
-const networks = starknetConfig.networks;
-let defaultNetwork = "alpha-goerli";
+// Command arguments
 const argv = yargs(process.argv.slice(2)).argv;
 const networkArg = argv.network;
 const contract =argv.contract;
 const constructorParams = argv._;
 
-// If a default network is set in the config, set it here otherwise it will be set as above.
-if (networks.hasOwnProperty("default")) {
-    defaultNetwork = networks[starknetConfig.networks.default.network].network_id;
-}
-
-let network;
-if (networkArg) {
-    // The user has selected a specific network using the --network argument
-    // Set the network to the selected network if it exists in the config - otherwise set it to the default network.
-    if (networks.hasOwnProperty(networkArg)) {
-        network = networks[networkArg].network_id;
-    } else {
-        logger.logInfo('The specified network is not configured. Using the default network: ', defaultNetwork);
-        network = defaultNetwork;
-    }
-} else {
-    // The user has not selected a specific network - use the default;
-    logger.logInfo('No network specified. Using the default network: ', defaultNetwork);
-    network = defaultNetwork;
-}
-logger.logInfo('Network: ', network);
+// StarkNet network configuration
+const network = setNetwork(networkArg);
 
 // Attempt to load the specified docker image
 let imageLoaded = false;

@@ -51,7 +51,7 @@ class Logger {
     }
 
     /**
-     * Sepearates a header from the logs below.
+     * Separates a header from the logs below.
      * @method
      */
     logHeader() {
@@ -70,7 +70,7 @@ class Logger {
      * Separate log output.
      * @method
      */
-    seperator() {
+    separator() {
         console.log(info('================================================================================'));
     }
 }
