@@ -46,7 +46,7 @@ try {
 }
 
 if (imageLoaded){
-  logger.logInfo(`Invoking contract function: `, `${contractFunction}`);
+  logger.logInfo(`${starknetCommand === 'call' ? 'Calling' : 'Invoking'} contract function: `, `${contractFunction}`);
   logger.logHeader();
 
   const abiFile = `${contractName}.json`
@@ -83,10 +83,10 @@ if (imageLoaded){
       );
     }
   } catch (error) {
-    logger.logError(`An error occurred while attempting to invoke a contract function: ${error.message}`);
+    logger.logError(`An error occurred while attempting to ${starknetCommand === 'call' ? 'call' : 'invoke'} a contract function: ${error.message}`);
   }
   if (result[0].StatusCode !== 0) {
-    logger.logError('There was an error invoking the function: ', contractFunction);
+    logger.logError(`There was an error ${starknetCommand === 'call' ? 'calling' : 'invoking'} the function: `, contractFunction);
   }
 
 } else {
