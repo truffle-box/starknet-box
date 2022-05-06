@@ -99,13 +99,20 @@ or, you may specify a network target with the `--network` argument:
 npm run starknet:deploy_account --network=testnet
 ```
 ### Fees
-Both StarkNet alpha-goerli and alpha-mainnet now have an operating fee mechanism. However, fees are not being charged at the time of writing. This will change in the very near future. To avoid problems interacting with StarkNet you should ensure that any account you use to interact with StarkNet is funded.
+Both StarkNet alpha-goerli and alpha-mainnet now have an operating fee mechanism. To avoid problems interacting with StarkNet you should ensure that any account you use to interact with StarkNet is funded.
 
 You can fund a test account using the [StarkNet alpha-goerli faucet](https://faucet.goerli.starknet.io/).
 ### Compiling
 To compile your StarkNet contracts using the Cairo compiler, run the following in your terminal:
 ```bash
 npm run starknet:compile
+```
+#### Hints
+Cairo programs can include Python code to be invoked in a block known as a hint, which is executed right before the next Cairo instruction. The hint can interact with the contract's variables/memory. Unfortunately, using hints is not possible in StarkNet. However, some Cairo library functions which include hints may still be used in StarkNet contracts through a whitelisting mechanism. You do not need to do anything to make those functions usable. At the time of writing, it is not possible to whitelist your own Cairo hints. This can only be achieved with the assistance of StarkWare.
+
+By default, the StarkNet compiler will try (and fail) to compile a contract that includes hints. Hint validation can be disabled, and contracts compiled with the following command:
+```bash
+npm run starknet:compile --disable_hints=true
 ```
 ### Deploying
 To deploy your compiled StarkNet contracts, run the following in your terminal:
