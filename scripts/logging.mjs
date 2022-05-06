@@ -17,7 +17,7 @@ class Logger {
      * @param {string} detail - the message detail will be appended if supplied
      */
     logInfo(msg, detail = '') {
-        console.info(info(msg) + info.bold(detail));
+        console.info('\u{2139} ' + info(msg) + info.bold(detail));
     }
 
     /**
@@ -27,7 +27,7 @@ class Logger {
      * @param {string} detail - the message detail will be appended if supplied
      */
     logWork(msg, detail = '') {
-        console.log(work(msg) + work.bold(detail));
+        console.log('\u{2705} ' + work(msg) + work.bold(detail));
     }
 
     /**
@@ -37,7 +37,7 @@ class Logger {
      * @param {string} detail - the message detail will be appended if supplied
      */
     logWarn(msg, detail = '') {
-        console.warn(warn(msg) + warn.bold(detail));
+        console.warn('\u{26A0} ' + warn(msg) + warn.bold(detail));
     }
     
     /**
@@ -47,11 +47,11 @@ class Logger {
      * @param {string} detail - the message detail will be appended if supplied
      */
     logError(msg, detail = '') {
-        console.error(error(msg) + error.bold(detail));
+        console.error('\u{2718} ' + error(msg) + error.bold(detail));
     }
 
     /**
-     * Sepearates a header from the logs below.
+     * Separates a header from the logs below.
      * @method
      */
     logHeader() {
@@ -70,7 +70,7 @@ class Logger {
      * Separate log output.
      * @method
      */
-    seperator() {
+    separator() {
         console.log(info('================================================================================'));
     }
 }

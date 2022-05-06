@@ -8,8 +8,7 @@
   },
   "scripts": {
     "test": "",
-    "docs": "node_modules/jsdoc/jsdoc.js -c ./.jsdoc.conf.json",
-    "starknet:compile": "node ./scripts/compile_starknet.mjs",
+    "starknet:compile": "node ./scripts/compile_starknet.mjs --disable_hints=$npm_config_disable_hints",
     "starknet:deploy": "node ./scripts/deploy_starknet.mjs --network=$npm_config_network --contract=$npm_config_contract",
     "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
     "starknet:invoke": "node scripts/call_invoke_transaction.mjs --command='invoke' --contract=$npm_config_contract --address=$npm_config_address --function=$npm_config_function --network=$npm_config_network",
@@ -36,15 +35,14 @@
   },
   "homepage": "https://github.com/truffle-box/starknet-box#readme",
   "devDependencies": {
-    "@truffle/hdwallet-provider": "^1.4.1",
-    "dotenv": "^10.0.0",
-    "jsdoc": "^3.6.10"
+    "@truffle/hdwallet-provider": "^2.0.8",
+    "dotenv": "^10.0.0"
   },
   "dependencies": {
     "chalk": "^5.0.1",
     "dockerode": "^3.3.1",
     "fse": "^4.0.1",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^3.2.4",
     "yargs": "^17.3.1"
   }
 }

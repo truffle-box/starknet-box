@@ -16,6 +16,7 @@ async def test_increase_balance():
     # Deploy the contract.
     contract = await starknet.deploy(
         source=CONTRACT_FILE,
+        constructor_calldata=[10]
     )
 
     # Invoke increase_balance() twice.
@@ -24,4 +25,4 @@ async def test_increase_balance():
 
     # Check the result of get_balance().
     execution_info = await contract.get_balance().call()
-    assert execution_info.result == (30,)
+    assert execution_info.result == (40,)
