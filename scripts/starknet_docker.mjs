@@ -73,20 +73,25 @@ import {
      * @param {string} projectDir - The path to the project root directory.
      * @param {string} contractsDir - The contract source code directory.
      * @param {string} buildDir - The contract compilation artifacts directory.
+     * @param {boolean} disableHints - Disable hint validation during contract compilation.
      * @returns {Promise<object>} The results of running the Docker container.
      * @throws {StarkNetCompileError} An error occurred while compiling a contract.
      */
-    compileContract = async (contractFile, projectDir, contractsDir, buildDir) => {
+    compileContract = async (contractFile, projectDir, contractsDir, buildDir, disableHints = false) => {
         const outputFilename = contractFile.substring(0, contractFile.indexOf(".cairo")) + ".json";
         const repoTag = this._image.getRepoTag();
 
         // Docker uses an array to construct the command to be run by the container.
         const command = [
-            `starknet-compile`, 
+            `starknet-compile`,
             `${contractsDir}/${contractFile}`,
             `--output`, `${buildDir}/${outputFilename}`,
             `--abi`, `${buildDir}/abis/${outputFilename}`
         ];
+        if (disableHints) {
+            command.push('--disable_hint_validation');
+        }
+
         const config = {
             'Hostconfig': {
                 'Binds': [`${projectDir}:/app`],

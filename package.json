@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "",
-    "starknet:compile": "node ./scripts/compile_starknet.mjs",
+    "starknet:compile": "node ./scripts/compile_starknet.mjs --disable_hints=$npm_config_disable_hints",
     "starknet:deploy": "node ./scripts/deploy_starknet.mjs --network=$npm_config_network --contract=$npm_config_contract",
     "starknet:deploy_account": "node ./scripts/deploy_account.mjs --network=$npm_config_network",
     "starknet:invoke": "node scripts/call_invoke_transaction.mjs --command='invoke' --contract=$npm_config_contract --address=$npm_config_address --function=$npm_config_function --network=$npm_config_network",

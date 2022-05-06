@@ -1,4 +1,7 @@
 import fse from 'fse';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+
 import { Image } from './truffle_docker.mjs';
 import { StarkNetDocker } from './starknet_docker.mjs';
 import starknetConfig from '../truffle-config.starknet.js';
@@ -9,7 +12,7 @@ const logger = new Logger();
 
 // Docker configurations
 const compiler_repo = starknetConfig.compilers.cairo.repository;
-const compiler_version = starknetConfig.compilers.cairo.version; 
+const compiler_version = starknetConfig.compilers.cairo.version;
 const image = new Image(compiler_repo,compiler_version);
 const starkNetDocker = new StarkNetDocker(image);
 
@@ -18,6 +21,11 @@ const projectDir = process.cwd();
 const buildDir = starknetConfig.contracts_build_directory;
 const abiDir = buildDir + "/abis";
 const contractsDir = starknetConfig.contracts_directory;
+
+// Command arguments
+const argv = yargs(hideBin(process.argv)).argv;
+const disableHints = argv.disable_hints ? true : false;
+logger.logInfo('Hint validation is: ', `${disableHints ? 'disabled' : 'enabled'}.`);
 
 // Attempt to load the specified docker image
 let imageLoaded = false;
@@ -45,7 +53,7 @@ if (imageLoaded) {
             logger.logWork(`Compiling ${file}`);
             let result;
             try {
-                result = await starkNetDocker.compileContract(file, projectDir, contractsDir, buildDir);
+                result = await starkNetDocker.compileContract(file, projectDir, contractsDir, buildDir, disableHints);
             } catch (error) {
                 logger.logError(`An error occurred while trying to compile a contract: ${error.message}`);
             }

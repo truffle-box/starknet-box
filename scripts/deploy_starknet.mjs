@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 import { Image } from './truffle_docker.mjs';
 import { StarkNetDocker } from './starknet_docker.mjs';
@@ -21,7 +22,7 @@ const buildDir = starknetConfig.contracts_build_directory;
 const accounts_dir = starknetConfig.starknet_accounts_directory;
 
 // Command arguments
-const argv = yargs(process.argv.slice(2)).argv;
+const argv = yargs(hideBin(process.argv)).argv;
 const networkArg = argv.network;
 const contract =argv.contract;
 const constructorParams = argv._;
