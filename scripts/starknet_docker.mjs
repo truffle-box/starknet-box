@@ -112,49 +112,25 @@ import {
      * Deploys a StarkNet contract.
      * @method
      * @param {string} accountsDir - The path to the StarkNet accounts directory. 
-     * @param {string} compiledContractFile - The filename of the compiled contract to deploy.
-     * @param {array} constructorInputs - Inputs to the contract constructor function.
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
-     * @param {string} buildDir - The contract compilation artifacts directory.
      * @param {string} network - The StarkNet network to deploy the contract to. (optional)
-     * @param {string} gatewayUrl - The gateway url if using a non-standard network, such as Devnet. (optional)
-     * @param {string} feederGatewayUrl - The feeder gateway url if using a non-standard network, such as Devnet. (optional)
-     * @param {boolean} wallet - Use an account for the deployment. Currently, deploying to Devnet must not use an account. Default to true. (optional)
+     * @param {array} commandArguments - An array of starknet deploy command arguments.
      * @returns {Promise<object>} The results of running the Docker container.
      * @throws {StarkNetDeploymentError} An error occurred while deploying a contract.
      */
     deployContract = async (
       accountsDir,
-      compiledContractFile,
-      constructorInputs,
       projectDir,
-      buildDir,
       network,
-      gatewayUrl = '',
-      feederGatewayUrl = '',
-      wallet = true) => {
+      commandArguments) => {
+
         const repoTag = this._image.getRepoTag();
         // Docker uses an array to construct the command to be run by the container.
         const command = [
             `starknet`,
-            `deploy`,
-            `--contract`, `${buildDir}/${compiledContractFile}`
+            `deploy`
         ];
-        if (gatewayUrl !== '' && feederGatewayUrl !== '') {
-            command.push(`--gateway_url`, `${gatewayUrl}`);
-            command.push(`--feeder_gateway_url`, `${feederGatewayUrl}`);
-        }
-        if (wallet === false) {
-            command.push('--no_wallet');
-        }
-        // Set up constructor arguments if supplied
-        if (constructorInputs.length >= 1) {
-            // Function arguments were passed in
-            command.push(`--inputs`);
-            for (let input of constructorInputs) {
-                command.push(input.toString());
-            }
-        }
+        command.push(...commandArguments);
 
         // Set up host and environment configuration for the container
         const config = {
@@ -167,6 +143,7 @@ import {
                 `STARKNET_ACCOUNT_DIR=${accountsDir}`
             ]
         };
+
         if (network !== 'devnet') {
             // If the target network is not devnet we need to set the STARKNET_NETWORK environment variable.
             config.Env.push(`STARKNET_NETWORK=${network}`);
@@ -179,7 +156,7 @@ import {
         try {
             result = await this.runContainerWithCommand(repoTag, command, config);
         } catch (error) {
-            throw new StarkNetDeploymentError(`An error occurred while deploying ${compiledContractFile}: ${error}`);
+            throw new StarkNetDeploymentError(`An error occurred while deploying the contract}: ${error}`);
         }
         return result;
     }

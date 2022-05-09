@@ -42,22 +42,39 @@ if (imageLoaded) {
     logger.logInfo(`Deploying Cairo contracts from the ${buildDir} directory.`);
     logger.logHeader();
     
-    const file = contract + ".json";
-    logger.logWork('Deploying: ', file);
+    const contractFile = contract + ".json";
+
+    const commandArguments = [
+      `--contract`, `${buildDir}/${contractFile}`
+    ];
+
+    if (network === 'devnet') {
+        commandArguments.push(...[
+          `--gateway_url`,
+          networks.devnet.gateway_url,
+          `--feeder_gateway_url`,
+          networks.devnet.feeder_gateway_url,
+          `--no_wallet`
+        ]);
+    }
+
+    if (constructorParams.length >= 1) {
+        commandArguments.push(`--inputs`);
+        constructorParams.forEach(input => {
+            commandArguments.push(input.toString());
+        })
+    }
+
+    logger.logWork('Deploying: ', contractFile);
+
     let result;
     try {
-        if (network === 'devnet') {
-            const gatewayUrl = networks.devnet.gateway_url;
-            const feederGatewayUrl = networks.devnet.feeder_gateway_url;
-            result = await starkNetDocker.deployContract(accounts_dir, file, constructorParams, projectDir, buildDir, network, gatewayUrl, feederGatewayUrl, false);
-        } else {
-            result = await starkNetDocker.deployContract(accounts_dir, file, constructorParams, projectDir, buildDir, network);
-        }
+        result = await starkNetDocker.deployContract(accounts_dir, projectDir, network, commandArguments);
     } catch (error) {
         logger.logError(`An error occurred while attempting to deploy a contract: ${error.message}`);
     }
     if (result[0].StatusCode !== 0) {
-        logger.logError('There was an error deploying: ', file);
+        logger.logError('There was an error deploying: ', contractFile);
     }
 } else {
     logger.logError('Unable to continue. The docker image could not be located. Requested image: ', image.getRepoTag());
