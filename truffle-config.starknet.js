@@ -29,8 +29,8 @@ module.exports = {
     // },
     devnet: {
       network_id: "devnet",
-      gateway_url: "http://starknet-devnet:5000/gateway/",
-      feeder_gateway_url: "http://starknet-devnet:5000/feeder_gateway/"
+      gateway_url: "http://starknet-devnet:5050/gateway/",
+      feeder_gateway_url: "http://starknet-devnet:5050/feeder_gateway/"
     },
     default: {
       network: "testnet",
@@ -40,12 +40,12 @@ module.exports = {
   compilers: {
     cairo: {
       repository: "trufflesuite/cairo-starknet-cli",  // Docker Hub repository
-      version: "0.8.0",                               // Version tag
+      version: "0.8.1",                               // Version tag
     }
   },
   // Configuration for StarkNet DevNet
   devnet: {
     repository: "shardlabs/starknet-devnet",  // Docker Hub repository
-    version: "0.1.19",                        // Version tag
+    version: "0.2.0",                        // Version tag
   },
 };
