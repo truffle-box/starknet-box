@@ -282,6 +282,80 @@ import {
     }
 
     /**
+     * Get the status of a specific transaction
+     * @param {string} accountsDir - The path to the StarkNet accounts directory.
+     * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
+     * @param {string} buildDir - The contract compilation artifacts directory.
+     * @param {string} hash - The transaction hash of the specific transaction.
+     * @param {string} network - The StarkNet network on which the transaction was made. (optional)
+     * @param {string} gatewayUrl - The gateway url if using a non-standard network, such as Devnet. (optional)
+     * @param {string} feederGatewayUrl - The feeder gateway url if using a non-standard network, such as Devnet. (optional)
+     * @param {string} contractFile - The file containing the compiled contract. (optional)
+     * @param {boolean} errorMsg - Show only the error message. (optional)
+     * * @return {Promise<void>}
+     */
+    getTransactionStatus = async (
+      accountsDir,
+      projectDir,
+      buildDir,
+      hash,
+      network,
+      gatewayUrl = '',
+      feederGatewayUrl = '',
+      contractFile='',
+      errorMsg=false
+    ) => {
+        const repoTag = this._image.getRepoTag();
+        // Docker uses an array to construct the command to be run by the container.
+        // Set up a StarkNet command
+        const command = [
+            `starknet`,
+            `tx_status`,
+            `--hash`, `${hash}`
+        ];
+        if (contractFile) {
+            command.push(`--contract`, `${buildDir}/${contractFile}`);
+        }
+        if (errorMsg) {
+            command.push(`--error_message`);
+        }
+
+        // Configure network arguments
+        if (gatewayUrl !== '' && feederGatewayUrl !== '') {
+            command.push(
+              `--gateway_url`, `${gatewayUrl}`,
+              `--feeder_gateway_url`, `${feederGatewayUrl}`
+            );
+        }
+        // Set up host and environment configuration for the container
+        const config = {
+            'Hostconfig': {
+                'Binds': [`${projectDir}:/app`],
+                'AutoRemove': true,
+            },
+            'Env': [
+                `STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount`,
+                `STARKNET_ACCOUNT_DIR=${accountsDir}`
+            ]
+        };
+        if (network !== 'devnet') {
+            // If the target network is not devnet we need to set the STARKNET_NETWORK environment variable.
+            config.Env.push(`STARKNET_NETWORK=${network}`);
+        } else {
+            // If the target network is devnet join the devnet docker network .
+            config.Hostconfig.NetworkMode = 'starknet-devnet';
+        }
+
+        let result;
+        try {
+            result = await this.runContainerWithCommand(repoTag, command, config);
+        } catch (error) {
+            throw new StarkNetFunctionError(`An error occurred while attempting to get the transaction status.`);
+        }
+        return result;
+    }
+
+    /**
      * Run the StarkNet tests.
      * @method
      * @param {string} testFile - The file name of the test file to run.
