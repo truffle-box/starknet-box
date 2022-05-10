@@ -222,48 +222,24 @@ import {
      * Get the status of a specific transaction
      * @param {string} accountsDir - The path to the StarkNet accounts directory.
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
-     * @param {string} buildDir - The contract compilation artifacts directory.
-     * @param {string} hash - The transaction hash of the specific transaction.
      * @param {string} network - The StarkNet network on which the transaction was made. (optional)
-     * @param {string} gatewayUrl - The gateway url if using a non-standard network, such as Devnet. (optional)
-     * @param {string} feederGatewayUrl - The feeder gateway url if using a non-standard network, such as Devnet. (optional)
-     * @param {string} contractFile - The file containing the compiled contract. (optional)
-     * @param {boolean} errorMsg - Show only the error message. (optional)
-     * * @return {Promise<void>}
+     * @param {Array<string>} commandArguments - An array of starknet deploy command arguments.
+     * @return {Promise<void>}
      */
     getTransactionStatus = async (
       accountsDir,
       projectDir,
-      buildDir,
-      hash,
       network,
-      gatewayUrl = '',
-      feederGatewayUrl = '',
-      contractFile='',
-      errorMsg=false
+      commandArguments
     ) => {
         const repoTag = this._image.getRepoTag();
         // Docker uses an array to construct the command to be run by the container.
         // Set up a StarkNet command
         const command = [
-            `starknet`,
-            `tx_status`,
-            `--hash`, `${hash}`
+            `starknet`, `tx_status`
         ];
-        if (contractFile) {
-            command.push(`--contract`, `${buildDir}/${contractFile}`);
-        }
-        if (errorMsg) {
-            command.push(`--error_message`);
-        }
+        command.push(...commandArguments);
 
-        // Configure network arguments
-        if (gatewayUrl !== '' && feederGatewayUrl !== '') {
-            command.push(
-              `--gateway_url`, `${gatewayUrl}`,
-              `--feeder_gateway_url`, `${feederGatewayUrl}`
-            );
-        }
         // Set up host and environment configuration for the container
         const config = {
             'Hostconfig': {
