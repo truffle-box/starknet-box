@@ -48,40 +48,34 @@ if (imageLoaded){
   logger.logInfo(`Getting status for transaction: `, `${txHash}`);
   logger.logHeader();
 
-  let contractDefinition = '';
+  const commandArguments = [ `--hash`, `${txHash}`];
+
   if (contractName) {
-    contractDefinition = `${contractName}.json`;
+    commandArguments.push(...[`--contract`, `${buildDir}/${contractName}.json`]);
+  }
+
+  if (network === 'devnet') {
+    commandArguments.push(...[
+      `--gateway_url`,
+      networks.devnet.gateway_url,
+      `--feeder_gateway_url`,
+      networks.devnet.feeder_gateway_url,
+      `--no_wallet`
+    ]);
+  }
+
+  if (getErrorMsg) {
+    commandArguments.push(`--error_message`);
   }
 
   let result;
   try {
-    if (network === 'devnet') {
-      const gatewayUrl = networks.devnet.gateway_url;
-      const feederGatewayUrl = networks.devnet.feeder_gateway_url;
       result = await starkNetDocker.getTransactionStatus(
         accounts_dir,
         projectDir,
-        buildDir,
-        txHash,
         network,
-        gatewayUrl,
-        feederGatewayUrl,
-        contractDefinition,
-        getErrorMsg
+        commandArguments
       );
-    } else {
-      result = await starkNetDocker.getTransactionStatus(
-        accounts_dir,
-        projectDir,
-        buildDir,
-        txHash,
-        network,
-        '',
-        '',
-        contractDefinition,
-        getErrorMsg
-      );
-    }
   } catch (error) {
     logger.logError(`An error occurred while attempting to get the transaction status.`);
   }
