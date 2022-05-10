@@ -69,28 +69,20 @@ import {
     /**
      * Compiles a Cairo/StarkNet contract.
      * @method
-     * @param {string} contractFile - The filename of the contract to compile.
      * @param {string} projectDir - The path to the project root directory.
-     * @param {string} contractsDir - The contract source code directory.
-     * @param {string} buildDir - The contract compilation artifacts directory.
-     * @param {boolean} disableHints - Disable hint validation during contract compilation.
+     * @param {Array<string>} commandArguments - An array of starknet deploy command arguments.
      * @returns {Promise<object>} The results of running the Docker container.
      * @throws {StarkNetCompileError} An error occurred while compiling a contract.
      */
-    compileContract = async (contractFile, projectDir, contractsDir, buildDir, disableHints = false) => {
-        const outputFilename = contractFile.substring(0, contractFile.indexOf(".cairo")) + ".json";
+    compileContract = async (
+      projectDir,
+      commandArguments
+    ) => {
         const repoTag = this._image.getRepoTag();
 
         // Docker uses an array to construct the command to be run by the container.
-        const command = [
-            `starknet-compile`,
-            `${contractsDir}/${contractFile}`,
-            `--output`, `${buildDir}/${outputFilename}`,
-            `--abi`, `${buildDir}/abis/${outputFilename}`
-        ];
-        if (disableHints) {
-            command.push('--disable_hint_validation');
-        }
+        const command = [ `starknet-compile` ];
+        command.push(...commandArguments);
 
         const config = {
             'Hostconfig': {
@@ -103,7 +95,7 @@ import {
         try {
             result = await this.runContainerWithCommand(repoTag, command, config);
         } catch (error) {
-            throw new StarkNetCompileError(`An error occurred while compiling ${contractFile}: ${error}`);
+            throw new StarkNetCompileError(`An error occurred while compiling the contract: ${error.message}`);
         }
         return result;
     }
@@ -113,7 +105,7 @@ import {
      * @method
      * @param {string} accountsDir - The path to the StarkNet accounts directory. 
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
-     * @param {string} network - The StarkNet network to deploy the contract to. (optional)
+     * @param {string} network - The StarkNet network to deploy the contract to.
      * @param {Array<string>} commandArguments - An array of starknet deploy command arguments.
      * @returns {Promise<object>} The results of running the Docker container.
      * @throws {StarkNetDeploymentError} An error occurred while deploying a contract.
@@ -166,7 +158,7 @@ import {
      * @method
      * @param {string} accountsDir - The path to the StarkNet accounts directory.
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
-     * @param {string} network - The StarkNet network to deploy the contract to. (optional)
+     * @param {string} network - The StarkNet network to deploy the contract to.
      * @param {string} starknetCommand - The StarkNet command (call or invoke).
      * @param {Array<string>} commandArguments - An array of starknet deploy command arguments.
      * @return {Promise<object>}
@@ -222,7 +214,7 @@ import {
      * Get the status of a specific transaction
      * @param {string} accountsDir - The path to the StarkNet accounts directory.
      * @param {string} projectDir - The path to the project root directory to bind the docker container's /app directory to.
-     * @param {string} network - The StarkNet network on which the transaction was made. (optional)
+     * @param {string} network - The StarkNet network on which the transaction was made.
      * @param {Array<string>} commandArguments - An array of starknet deploy command arguments.
      * @return {Promise<void>}
      */

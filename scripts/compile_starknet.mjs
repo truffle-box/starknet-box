@@ -51,9 +51,18 @@ if (imageLoaded) {
     for (let file of directoryList) {
         if (file.endsWith("cairo")) {
             logger.logWork(`Compiling ${file}`);
+            const outputFilename = file.substring(0, file.indexOf(".cairo")) + ".json";
+            const commandArguments = [
+              `${contractsDir}/${file}`,
+              `--output`, `${buildDir}/${outputFilename}`,
+              `--abi`, `${buildDir}/abis/${outputFilename}`
+            ];
+            if (disableHints) {
+                commandArguments.push(`--disable_hint_validation`);
+            }
             let result;
             try {
-                result = await starkNetDocker.compileContract(file, projectDir, contractsDir, buildDir, disableHints);
+                result = await starkNetDocker.compileContract(projectDir, commandArguments);
             } catch (error) {
                 logger.logError(`An error occurred while trying to compile a contract: ${error.message}`);
             }
