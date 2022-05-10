@@ -49,44 +49,45 @@ if (imageLoaded){
   logger.logInfo(`${starknetCommand === 'call' ? 'Calling' : 'Invoking'} contract function: `, `${contractFunction}`);
   logger.logHeader();
 
+  const commandArguments = [];
+  if (network === 'devnet') {
+    commandArguments.push(...[
+        `--gateway_url`,
+        networks.devnet.gateway_url,
+        `--feeder_gateway_url`,
+        networks.devnet.feeder_gateway_url,
+        `--no_wallet`
+      ]);
+  }
+
   const abiFile = `${contractName}.json`
+  commandArguments.push(...[
+    `--abi`, `${buildDir}/abis/${abiFile}`,
+    `--address`, `${contractAddress}`,
+    `--function`, `${contractFunction}`
+  ]);
+
+  if (functionParams.length >= 1) {
+    commandArguments.push(`--inputs`);
+    functionParams.forEach(input => {
+      commandArguments.push(input.toString());
+    })
+  }
 
   let result;
   try {
-    if (network === 'devnet') {
-      const gatewayUrl = networks.devnet.gateway_url;
-      const feederGatewayUrl = networks.devnet.feeder_gateway_url;
-      result = await starkNetDocker.callOrInvokeFunction(
-        accounts_dir,
-        contractAddress,
-        starknetCommand,
-        abiFile,
-        contractFunction,
-        functionParams,
-        projectDir,
-        buildDir,
-        network,
-        gatewayUrl,
-        feederGatewayUrl, false
-      );
-    } else {
-      result = await starkNetDocker.callOrInvokeFunction(
-        accounts_dir,
-        contractAddress,
-        starknetCommand,
-        abiFile,
-        contractFunction,
-        functionParams,
-        projectDir,
-        buildDir,
-        network
-      );
-    }
+    result = await starkNetDocker.callOrInvokeFunction(
+      accounts_dir,
+      projectDir,
+      network,
+      starknetCommand,
+      commandArguments
+    );
   } catch (error) {
     logger.logError(`An error occurred while attempting to ${starknetCommand === 'call' ? 'call' : 'invoke'} a contract function: ${error.message}`);
   }
   if (result[0].StatusCode !== 0) {
-    logger.logError(`There was an error ${starknetCommand === 'call' ? 'calling' : 'invoking'} the function: `, contractFunction);
+    logger.logError(`There was an error ${starknetCommand === 'call' ? 'calling' : 'invoking'} the function.`);
   }
 
 } else {
