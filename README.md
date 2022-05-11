@@ -13,6 +13,7 @@
   - [Deploying](#deploying)
   - [Invoking](#invoking)
   - [Calling](#calling)
+  - [Transaction Status](#transaction-status)
 - [Basic Commands](#basic-commands)
   - [Testing](#testing)
   - [Communication between StarkNet Layer 1 and Layer 2](#communication-between-starknet-layer-1-and-layer-2)
@@ -26,9 +27,9 @@
   - [Stopping Devnet](#stopping-devnet)
 - [Support](#support)
 
-This Truffle StarkNet Box provides you with the boilerplate structure necessary to start coding for StarkWare's Ethereum L2 solution, StarNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
+This Truffle StarkNet Box is a proof of concept box intended to explore how StarkNet development may be integrated into Truffle Suite. It provides you with the boilerplate structure necessary to start coding for StarkWare's Ethereum L2 solution, StarNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
 
-This box provides a simple Cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version 0.7.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
+This box provides a simple Cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version ^0.8.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
 ## Requirements
 The StarkNet Box has the following requirements:
 - [Node.js](https://nodejs.org/) 14.18.2 or later
@@ -137,6 +138,15 @@ To call a function on a deployed contract, run the following in your terminal:
 npm run starknet:call --contract=<contract_name> --address=<contract_address> --function=<function_name> <function_argumnents>
 ```
 where <function_arguments> is a space-delimited list of values required by the function to be called.
+### Transaction Status
+To get the status of a transaction, run the following in your terminal:
+```bash
+npm run starknet:tx_status --hash=<transaction_hash>
+```
+You may also specify the network with the `--network` argument:
+```bash
+npm run starknet:tx_status --network=devnet --hash=<transaction_hash>
+```
 ## Basic Commands
 The code here will allow you to compile, deploy, and test your code against a simulation of a StarkNet network. The following commands can be run:
 
@@ -163,6 +173,10 @@ npm run starknet:invoke --contract=<contract_name> --address=<contract_address> 
 To call a function:
 ```bash
 npm run starknet:call --contract=<contract_name> --address=<contract_address> --function=<function_name> <function_argumnents>
+```
+To get a transaction status:
+```bash
+npm run starknet:tx_status --hash<transaction_hash>
 ```
 ### Testing
 Currently, this box supports testing via the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework. The test script makes use of StarkNet's unit testing framework to instantiate a local simulation of a StarkNet network against which unit tests can be run. In order to run the test provided in the boilerplate, use the following command:
@@ -211,18 +225,27 @@ Transaction hash: 0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f
 ```
 In the Devnet console, output similar to the following should be displayed:
 ```bash
-192.168.176.3 - - [31/Mar/2022 05:55:16] "POST /gateway/add_transaction HTTP/1.1" 200 -
+"172.18.0.3 - - [11/May/2022:00:46:39 +0000] "POST /gateway/add_transaction HTTP/1.1" 200 197 "-" "Python/3.7 aiohttp/3.8.1"
 ```
 ### Querying transaction status
 ```bash
-starknet tx_status --no_wallet \
---gateway_url http://127.0.0.1:5000/gateway/ \
---feeder_gateway_url http://127.0.0.1:5000/feeder_gateway/ \
---hash 0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f5d0e
+npm run starknet:tx_status --network=devnet --hash 0x38bdfeeff986cbab8fff68264ca0b2e018fa568325c459c80b4b16bfbd3f28a
 ```
+Output similar to the following should then be displayed in the console:
+```bash
+Network: devnet
+Getting status for transaction: 0x38bdfeeff986cbab8fff68264ca0b2e018fa568325c459c80b4b16bfbd3f28a
+================================================================================
+
+{
+    "block_hash": "0x023ceed3330b0bec4627d308a5492e70b7b49d2beacb2282b3615d4e2faa9e5e",
+    "tx_status": "ACCEPTED_ON_L2"
+}
+```
+
 Again, the Devnet console will display output similar to the following:
 ```bash
-192.168.176.3 - - [22/Feb/2022 04:02:46] "GET /feeder_gateway/get_transaction_status?transactionHash=0x071f88ab03ea54985f1167d81eb59be023714cfcff6ab01a943e98fee27f5d0e HTTP/1.1" 200 -
+"172.18.0.3 - - [11/May/2022:00:47:49 +0000] "GET /feeder_gateway/get_transaction_status HTTP/1.1" 200 113 "-" "Python/3.7 aiohttp/3.8.1"+
 ```
 ### Invoking a contract function
 ```bash
@@ -230,7 +253,7 @@ npm run starknet:invoke --network=devnet --contract=contract --address=0x040ac73
 ```
 This will produce output similar to the following in the Devnet console:
 ```bash 
-192.168.176.3 - - [22/Feb/2022 04:04:22] "POST /gateway/add_transaction HTTP/1.1" 200 -
+"172.18.0.3 - - [11/May/2022:00:49:42 +0000] "POST /gateway/add_transaction HTTP/1.1" 200 210 "-" "Python/3.7 aiohttp/3.8.1"
 ```
 ### Calling a contract function
 ```bash
@@ -238,7 +261,7 @@ npm run starknet:call --network=devnet --contract=contract --address=0x040ac735f
 ```
 This will produce output similar to the following in the Devnet console:
 ```bash
-192.168.176.3 - - [22/Feb/2022 04:06:09] "POST /feeder_gateway/call_contract?blockNumber=null HTTP/1.1" 200 -
+"172.18.0.3 - - [11/May/2022:00:50:37 +0000] "POST /feeder_gateway/call_contract HTTP/1.1" 200 21 "-" "Python/3.7 aiohttp/3.8.1"
 ```
 ### Stopping Devnet
 The running Devnet container can be stopped with docker. First type CTRL+C to exit Devnet's console. This should take you back to your terminal in your project's root directory. The Devnet container is still running though. To stop the container, use the following docker command:
