@@ -118,7 +118,7 @@ npm run starknet:compile --disable_hints=true
 ### Deploying
 To deploy your compiled StarkNet contracts, run the following in your terminal:
 ```bash
-npm run starknet:deploy --contract<contract_name> <constructor_arguments>
+npm run starknet:deploy --contract=<contract_name> <constructor_arguments>
 ```
 where <constructor_arguments> is a space-delimited list of arguments to be passed into the contract's constructor. If the contract's constructor requires no arguments, then no arguments need to be provided.
 
