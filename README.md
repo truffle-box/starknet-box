@@ -176,7 +176,7 @@ npm run starknet:call --contract=<contract_name> --address=<contract_address> --
 ```
 To get a transaction status:
 ```bash
-npm run starknet:tx_status --hash<transaction_hash>
+npm run starknet:tx_status --hash=<transaction_hash>
 ```
 ### Testing
 Currently, this box supports testing via the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework. The test script makes use of StarkNet's unit testing framework to instantiate a local simulation of a StarkNet network against which unit tests can be run. In order to run the test provided in the boilerplate, use the following command:
@@ -229,7 +229,7 @@ In the Devnet console, output similar to the following should be displayed:
 ```
 ### Querying transaction status
 ```bash
-npm run starknet:tx_status --network=devnet --hash 0x38bdfeeff986cbab8fff68264ca0b2e018fa568325c459c80b4b16bfbd3f28a
+npm run starknet:tx_status --network=devnet --hash=0x38bdfeeff986cbab8fff68264ca0b2e018fa568325c459c80b4b16bfbd3f28a
 ```
 Output similar to the following should then be displayed in the console:
 ```bash
