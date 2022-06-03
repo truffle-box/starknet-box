@@ -1,5 +1,5 @@
 {
-  "ignore": ["README.md", ".gitignore"],
+  "ignore": [".gitignore"],
   "hooks": {
     "post-unpack": "npm install --loglevel=error && mkdir starknet_accounts"
   }
