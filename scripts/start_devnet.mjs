@@ -1,3 +1,6 @@
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+
 import { Image } from './truffle_docker.mjs';
 import { StarkNetDevnetDocker } from './starknet_devnet_docker.mjs';
 
@@ -6,11 +9,19 @@ import { Logger } from './logging.mjs';
 const logger = new Logger();
 
 import starknetConfig from '../truffle-config.starknet.js';
+// Command arguments
+const argv = yargs(hideBin(process.argv)).argv;
+const arm64Image = argv.arm64 ? true : false;
 
 const devnet_repo = starknetConfig.devnet.repository;
-const devnet_version = starknetConfig.devnet.version;
+let devnet_version = starknetConfig.devnet.version;
+if (arm64Image) {
+    devnet_version = devnet_version + `-arm`;
+}
+console.log(`${devnet_repo}${devnet_version}`);
 const image = new Image(devnet_repo, devnet_version);
 const starknetDevnetDocker = new StarkNetDevnetDocker(image);
+
 
 // Attempt to load the specified docker image
 let imageLoaded = false;

@@ -14,7 +14,7 @@
     "starknet:invoke": "node scripts/call_invoke_transaction.mjs --command='invoke' --contract=$npm_config_contract --address=$npm_config_address --function=$npm_config_function --network=$npm_config_network",
     "starknet:call": "node ./scripts/call_invoke_transaction.mjs --command='call' --contract=$npm_config_contract --address=$npm_config_address --function=$npm_config_function --network=$npm_config_network",
     "starknet:tx_status": "node ./scripts/tx_status.mjs --hash=$npm_config_hash --network=$npm_config_network --contract=$npm_config_contract --error_message=$npm_config_error_message",
-    "starknet:start_devnet": "node ./scripts/start_devnet.mjs",
+    "starknet:start_devnet": "node ./scripts/start_devnet.mjs --arm64=$npm_config_arm64",
     "starknet:test": "node ./scripts/test_starknet.mjs"
   },
   "repository": {

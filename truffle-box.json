@@ -1,6 +1,6 @@
 {
   "ignore": [".gitignore"],
   "hooks": {
-    "post-unpack": "npm install --loglevel=error && mkdir starknet_accounts"
+    "post-unpack": "npm install --loglevel=error && mkdir starknet_accounts contracts/ethereum"
   }
 }
