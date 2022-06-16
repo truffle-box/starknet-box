@@ -27,7 +27,7 @@
   - [Stopping Devnet](#stopping-devnet)
 - [Support](#support)
 
-This Truffle StarkNet Box is a proof of concept box intended to explore how StarkNet development may be integrated into Truffle Suite. It provides you with the boilerplate structure necessary to start coding for StarkWare's Ethereum L2 solution, StarNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
+This Truffle StarkNet Box is a proof of concept box intended to explore how StarkNet development may be integrated into Truffle Suite. It provides you with the boilerplate structure necessary to start coding for StarkWare's Ethereum L2 solution, StarkNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
 
 This box provides a simple Cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). This box will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use the Cairo version ^0.8.0 for contract compilation and deployment. A sample test script is also provided which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
 ## Requirements
@@ -187,7 +187,7 @@ npm run starknet:test
 The information above should allow you to deploy to the StarkNet Layer 2 network. This is only the first step! Once you are ready to deploy your own contracts on Layer 1 to interact with contracts on Layer 2, you will need to be aware of the ways in which Layer 1 and Layer 2 are able to interact in the StarkNet ecosystem. Keep an eye out for additional Truffle tooling and examples that elucidate this second step to full StarkNet integration!
 
 ## StarkNet Devnet
-This box includes support for using the [Shard Labs StarkNet devnet docker image](https://github.com/Shard-Labs/starknet-devnet) for development testing.
+This box includes support for using the [Shard Labs StarkNet devnet docker image](https://github.com/Shard-Labs/starknet-devnet) for development testing. The StarkNet Devnet docker image comes in two flavours. For most users the regular version will work just fine. However, if you have an arm based system, such as an Apple M1, you might get better performance with a Docker image built specifically for it.
  
 **Important note:** Devnet should not be used in substitution for testing on Alpha testnet (Goerli). Devnet is useful for testing during development. However, Devnet hash calculations for transactions and blocks differ from those used on Alpha testnet. Be sure to test your contracts on Alpha testnet.
 ### Using Devnet
@@ -197,6 +197,13 @@ To start Devnet, in a new terminal window navigate to your project's root direct
 ```bash
 npm run starknet:start_devnet
 ```
+
+To use the arm64 version of the StarkNet Devnet docker image you can do so with the `--arm64` flag: For example:
+
+```bash
+npm run starknet:start_devnet --arm64
+```
+
 This will run a Docker container named `starknet-devnet` from the Devnet image. If the Devnet image is not already present on your system an attempt will be made to pull it from the Docker Hub before being run. Once the container is running you should see console output similar to this:
 ```bash
 > starknet-box@0.0.1 starknet:start_devnet /Users/username/dev/tarknet-box
@@ -210,7 +217,8 @@ Despite the output in the console, the Devnet network will be available on http:
 
 When using Devnet rather that Alpha testnet, you must use the StarkNet cli gateway arguments rather than the --network argument or a STARKNET_NETWORK environment variable. At the time of writing this, account contracts were not yet implemented on Devnet, so you must also use the --no_wallet argument. Some examples are set out below. 
 
-Once your Devnet is up and running as above, you can begin to interact with it by deploying your contracts and invoking and calling your contract functions. The following examples use the StarkNet cli to interact with Devnet. 
+Once your Devnet is up and running as above, you can begin to interact with it by deploying your contracts and invoking and calling your contract functions. The following examples use the StarkNet cli to interact with Devnet.
+
 ### Deploying a contract
 ```bash
 npm run starknet:deploy --network=devnet --contract=<contract_name> <constructor_arguments>

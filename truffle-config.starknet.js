@@ -40,12 +40,12 @@ module.exports = {
   compilers: {
     cairo: {
       repository: "trufflesuite/cairo-starknet-cli",  // Docker Hub repository
-      version: "0.8.1",                               // Version tag
+      version: "0.9.0",                               // Version tag
     }
   },
   // Configuration for StarkNet DevNet
   devnet: {
     repository: "shardlabs/starknet-devnet",  // Docker Hub repository
-    version: "0.2.0",                        // Version tag
+    version: "0.2.3",                        // Version tag
   },
 };
