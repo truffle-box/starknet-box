@@ -229,8 +229,8 @@ The information above should allow you to deploy to the StarkNet Layer 2 network
 
 ## StarkNet Devnet
 
-This box includes support for using the [Shard Labs StarkNet devnet docker image](https://github.com/Shard-Labs/starknet-devnet) for development testing.
-
+This box includes support for using the [Shard Labs StarkNet devnet docker image](https://github.com/Shard-Labs/starknet-devnet) for development testing. The StarkNet Devnet docker image comes in two flavours. For most users the regular version will work just fine. However, if you have an arm based system, such as an Apple M1, you might get better performance with a Docker image built specifically for it.
+ 
 **Important note:** Devnet should not be used in substitution for testing on Alpha testnet (Goerli). Devnet is useful for testing during development. However, Devnet hash calculations for transactions and blocks differ from those used on Alpha testnet. Be sure to test your contracts on Alpha testnet.
 ### Using Devnet
 
@@ -242,6 +242,13 @@ To start Devnet, in a new terminal window navigate to your project's root direct
 ```bash
 npm run starknet:start_devnet
 ```
+
+To use the arm64 version of the StarkNet Devnet docker image you can do so with the `--arm64` flag: For example:
+
+```bash
+npm run starknet:start_devnet --arm64
+```
+
 This will run a Docker container named `starknet-devnet` from the Devnet image. If the Devnet image is not already present on your system an attempt will be made to pull it from the Docker Hub before being run. Once the container is running you should see console output similar to this:
 
 ```bash
