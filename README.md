@@ -46,7 +46,7 @@ The StarkNet Box has the following requirements:
 
 ## Quick Start
 
-The following commands will get you up and running with the StarkNet box quickly. For more details, you are encouraged to read this document in full.
+The following commands demonstrate how to use the StatkNet box and will help you to get up and running quickly. For more details, you are encouraged to read this document in full.
 
 ### 1. Install the box
 
@@ -56,7 +56,7 @@ In your terminal create a new directory, and in that directory run the following
 truffle unbox starknet
 ```
 
-### 2. Deploy an account
+### 2. Deploy an account contract
 
 ```bash
 npm run starknet:deploy_account
@@ -70,17 +70,23 @@ npm run starknet:compile
 
 ### 4. Deploy a contract
 
+In this example we pass in a value of `1000` to the constructor.
+
 ```bash
 npm run starknet:deploy --contract=contract 1000
 ```
 
 ### 5. Check a transaction status
 
+You will need to supply the transaction hash from the previous contract deployment.
+
 ```bash
 npm run starknet:tx_status --hash=<transaction_hash>
 ```
 
 ### 6. Call or invoke a contract transaction
+
+You will need to supply the contract address returned when the contract was deployed. In the case of the invoke transaction, we pass the value of `1000` to the increase_balance function.
 
 ```bash
 npm run starknet:call --contract=contract --address=<contract_address> --function=get_balance
