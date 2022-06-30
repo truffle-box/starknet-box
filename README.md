@@ -1,8 +1,9 @@
 # StarkNet Box
 
 - [Requirements](#requirements)
-- [Installation](#installation)
-- [Setup](#setup)
+- [Quick Start](#quick-start)
+- [Installation and Setup](#installation-and-setup)
+  - [Installation](#installation)
   - [Docker](#docker)
   - [Configuration](#configuration)
   - [Directory Structure for Artifacts](#directory-structure-for-artifacts)
@@ -31,6 +32,7 @@
 The Truffle StarkNet Box provides the boilerplate Truffle structure necessary to start coding for StarkWare's Ethereum L2 solution, StarkNet. StarkNet is a permissionless decentralized Validity-Rollup (also known as a "ZK-Rollup"). For detailed information on StarkNet, please see their documentation [here](https://starknet.io/).
 
 This box provides a simple Cairo contract. The same contract found in the [Hello, StarkNet tutorial](https://starknet.io/docs/hello_starknet/intro.html#your-first-contract). The code contained here will allow you to compile the StarkNet contract and then deploy it to StarkNet Alpha on the Goerli test network. The Box is configured to use Cairo version ^0.8.0 for contract compilation and deployment. A sample test script is also provided, which simulates a StarkNet system and runs tests with the [pytest](https://docs.pytest.org/en/6.2.x/) testing framework.
+
 ## Requirements
 
 The StarkNet Box has the following requirements:
@@ -42,14 +44,68 @@ The StarkNet Box has the following requirements:
 
 **Important Note:** The scripts included in this Box rely on Docker being available and running. On Linux you may need to have Docker configured to [run the Docker daemon in 'rootless' mode](https://docs.docker.com/engine/security/rootless/).
 
-## Installation
+## Quick Start
+
+The following commands will get you up and running with the StarkNet box quickly. For more details, you are encouraged to read this document in full.
+
+### 1. Install the box
+
+In your terminal create a new directory, and in that directory run the following command:
+
+```bash
+truffle unbox starknet
+```
+
+### 2. Deploy an account
+
+```bash
+npm run starknet:deploy_account
+```
+
+### 3. Compile a contract
+
+```bash
+npm run starknet:compile
+```
+
+### 4. Deploy a contract
+
+```bash
+npm run starknet:deploy --contract=contract 1000
+```
+
+### 5. Check a transaction status
+
+```bash
+npm run starknet:tx_status --hash=<transaction_hash>
+```
+
+### 6. Call or invoke a contract transaction
+
+```bash
+npm run starknet:call --contract=contract --address=<contract_address> --function=get_balance
+```
+
+```bash
+npm run starknet:invoke --contract=contract --address=<contract_address> --function=increase_balance 1000
+```
+
+### 7. Run unit tests
+
+```bash
+npm run starknet:test
+```
+
+## Installation and Setup
+
+### Installation
 
 Note that this installation command will only work once the box is published (in the interim you can use `truffle unbox https://github.com/truffle-box/starknet-box`).
 
 ```bash
 truffle unbox starknet
 ```
-## Setup
+
 ### Docker
 
 This Truffle Box uses two Docker images to compile, deploy, interact with, and test StarkNet contracts. Accordingly, Docker must be installed on the host machine to make use of this box. The Docker images do not need to exist on the host machine prior to use - they will be pulled from the Docker Hub if they are not already available locally. Docker Desktop can be downloaded from the Docker website. We suggest that you read the [Docker installation guide](https://docs.docker.com/get-docker/) to suit your operating system.
