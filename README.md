@@ -46,7 +46,7 @@ The StarkNet Box has the following requirements:
 
 ## Quick Start
 
-The following commands demonstrate how to use the StatkNet box and will help you to get up and running quickly. For more details, you are encouraged to read this document in full.
+The following commands demonstrate how to use the StarkNet box and will help you to get up and running quickly. For more details, you are encouraged to read this document in full.
 
 ### 1. Install the box
 
