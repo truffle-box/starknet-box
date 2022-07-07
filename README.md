@@ -102,6 +102,14 @@ npm run starknet:invoke --contract=contract --address=<contract_address> --funct
 npm run starknet:test
 ```
 
+### 8. Run StarkNet Devnet
+
+StarkNet Devnet is a local StarkNet network that can be used during development for testing StarkNet contracts. 
+
+```bash
+npm run starknet:start_devnet
+```
+
 ## Installation and Setup
 
 ### Installation
